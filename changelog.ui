@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChangeLog</class>
+ <widget class="QDialog" name="ChangeLog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetDefaultConstraint</enum>
+   </property>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Change Log:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="plainTextEdit">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="plainText">
+      <string>-0.1.1-
+1. Implemeted qt resource files to handle acronym class data. the Acronym list is hard wired into the binary code.
+2. Added ablility for the user to choose their own custom made list!
+3. Added limited debug options (for use with QT creator IDE) options can be disabled.
+4. Added drop down list for user to select the format style of the Acronyms found.
+5. Created logic to handle save states.  Program will now create a config.dat file and save the debug state / window size and window pos and it will remember the acronym formating style.
+6. Created this ChangeLog window.
+7. Added menu options: Open, Export, Close.  Non implemented options greyed out for now.  Will be implementing the rest soon!
+8. Added button to reset window to center and to reset size hot key Cntl&lt;home&gt;
+
+
+-0.1.0- gui update
+1. Redesigned the source files to use C++ Qt framework
+2. Solidified Logic with RegEx 
+3. Build gui around two text input boxes allowing the user more freedom when entering data
+
+-0.0.2 - Logic build
+1. removed def_num from constructor lists.
+2. created set_num method
+3. created \&quot;Classes.txt\&quot; file with acronyms.  Constructed function to build classes from this file.
+4. added logic to prompt user if there are any additional lines to add
+5. Changelog built into program
+
+-0.0.1 -
+1. Initial Creation of Source Files</string>
+     </property>
+     <property name="backgroundVisible">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Ok</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
