@@ -21,6 +21,7 @@ Sorter::Sorter(QWidget *parent) :
     Load_Config();
     ui->statusBar->showMessage("Config Init Successful... Previous State Loaded!",4000);
 
+
 }
 
 Sorter::~Sorter()
