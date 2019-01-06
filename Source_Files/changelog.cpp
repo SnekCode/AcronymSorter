@@ -7,7 +7,7 @@
 void ChangeLog::Load()
 {
     QString v ;
-    QFile clog(":/data/ChangeLog.txt");
+    QFile clog(":/Data/ChangeLog.txt");
     clog.open(QIODevice::ReadWrite | QIODevice::Text);
     qDebug() << "exists?              " << clog.exists();
     qDebug() << "writable?            " << clog.isWritable();
@@ -21,19 +21,24 @@ void ChangeLog::Load()
     clog.close();
     clog.open(QIODevice::ReadOnly);
     //QTextStream load (&clog);
+    QString line;
     while (!clog.atEnd()) {
-        QString line = clog.readLine();
+        line = clog.readLine();
         v.append(line);
     }
     ui->plainTextEdit->setPlainText(v);
-}
+    for (int i{0}; i<7; i++)
+    {
+        versionTitle.append(v.at(i));
+    }
+    this->setWindowTitle(versionTitle);
+    }
 
 ChangeLog::ChangeLog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChangeLog)
 {
     ui->setupUi(this);
-    this->setWindowTitle(versionTitle);
     Load();
 
 }

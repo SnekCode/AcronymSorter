@@ -12,7 +12,7 @@ class ChangeLog : public QDialog
     Q_OBJECT
 
 public:
-    QString versionTitle = "Sorter v0.1.2";
+    QString versionTitle = "Sorter ";
 
     explicit ChangeLog(QWidget *parent = nullptr);
     ~ChangeLog();
