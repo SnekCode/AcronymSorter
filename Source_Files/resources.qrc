@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Data/ChangeLog.txt</file>
+        <file>Data/Classes.txt</file>
+        <file>images/Acronym.png</file>
+        <file>images/Acronym2.png</file>
+        <file>images/clear.png</file>
+        <file>images/copy.png</file>
+        <file>images/cut.png</file>
+        <file>images/database.png</file>
+        <file>images/debug active.jpg</file>
+        <file>images/debug.png</file>
+        <file>images/exit.png</file>
+        <file>images/export.png</file>
+        <file>images/help.png</file>
+        <file>images/open.png</file>
+        <file>images/open_folder.png</file>
+        <file>images/paste.png</file>
+        <file>images/reset.png</file>
+        <file>images/restore.png</file>
+        <file>images/swap.png</file>
+        <file>images/version.png</file>
+    </qresource>
+</RCC>

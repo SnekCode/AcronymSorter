@@ -20,7 +20,7 @@ class Sorter : public QMainWindow
 friend Acronyms;
 private:
 //defaults
-QString defaultfile = ":/data/Classes.txt";
+QString defaultfile = ":/Data/Classes.txt";
 QString config = "config.dat";
 QString Diag_File = "Diag.txt";
 int defaultfontsize = 8;
