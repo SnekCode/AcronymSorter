@@ -39,6 +39,9 @@ ChangeLog::ChangeLog(QWidget *parent) :
     ui(new Ui::ChangeLog)
 {
     ui->setupUi(this);
+    QIcon *ico = new QIcon();
+        ico->addPixmap(QPixmap(":/images/help.png"),QIcon::Active,QIcon::On);
+        this->setWindowIcon(*ico);
     Load();
 
 }

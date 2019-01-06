@@ -18,6 +18,9 @@ Sorter::Sorter(QWidget *parent) :
     ui(new Ui::Sorter)
 {
     ui->setupUi(this);
+    QIcon *ico = new QIcon();
+        ico->addPixmap(QPixmap(":/images/Acronym.png"),QIcon::Active,QIcon::On);
+        this->setWindowIcon(*ico);
     Load_Config();
     ui->statusBar->showMessage("Config Init Successful... Previous State Loaded!",4000);
 
@@ -771,7 +774,7 @@ void Sorter::on_actionDebug_triggered()
         debug = true;
         this->setWindowTitle("Sorter :: DEBUG MODE");
         QIcon *ico = new QIcon();
-            ico->addPixmap(QPixmap(":/img/debug active.jpg"),QIcon::Active,QIcon::On);
+            ico->addPixmap(QPixmap(":/images/debug active.jpg"),QIcon::Active,QIcon::On);
             ui->actionDebug->setIcon(*ico);
 
     }

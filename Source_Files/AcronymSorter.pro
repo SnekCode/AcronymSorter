@@ -33,7 +33,8 @@ SOURCES += \
 HEADERS += \
         sorter.h \
     Acronyms.h \
-    changelog.h
+    changelog.h \
+    Acronyms.rc
 
 FORMS += \
         sorter.ui \
@@ -49,4 +50,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     resources.qrc
 
-DISTFILES +=
+win32 {
+ RC_FILE = Acronyms.rc
+}
+
