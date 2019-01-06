@@ -589,11 +589,12 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
             QRegularExpressionMatch match2;
             match = rx.match(input_box_txt);
             match2 = rx.match(Unknown_txt);
-            if(match.hasMatch())
+            if(match.hasMatch())  //Need to build logic to check for repeated Acronyms.
                 {
                 if(match2.hasMatch()){
-                    int j = match.lastCapturedIndex();
-                    int n = match.capturedLength();
+                    int j = match2.capturedEnd();
+                    int n = match2.capturedLength();
+                    j -= n;
                     Unknown_txt.replace(j,n," ");
                     return true;
                 }//if#2
