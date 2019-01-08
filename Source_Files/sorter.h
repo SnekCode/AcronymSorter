@@ -22,7 +22,7 @@ private:
 //defaults
 QString defaultfile = ":/Data/Classes.txt";
 QString config = "config.dat";
-QString Diag_File = "Diag.txt";
+QString Diag_File = "Diag.csv";
 int defaultfontsize = 8;
 
 //properties

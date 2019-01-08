@@ -185,9 +185,9 @@ void Sorter::Logic_Diagnostic()
 
                 while (count < output_list.count()){
 
-                    save << input_list.at(count) << "\t"
-                         << output_list.at(count) << "\t"
-                         << "\n";
+                    save << input_list.at(count) << ","
+                         << output_list.at(count) << ","
+                         << endl;
                     count++;
                 }
                 QString qdatabasecount = QString::fromStdString(std::to_string(databasecount));
@@ -282,6 +282,7 @@ void Sorter::Load_List()
                        {
                        if (test_length == 1)
                       {
+                           //restructure to always pass the single case acronym to the class builder if found in input box.  the use of a third int val or possible global bool will determine if single case actually exists.  See TODO.txt for sudo code.
                           if(SingleCase(qtest_case, Unknown_txt))
                           {
                           ClassPhrase(arg, *KnownPtr);
@@ -449,7 +450,9 @@ void Sorter::ClassPhrase (QStringList &arg, QString &KnownList){
 
                    //ui->OutputBox->appendPlainText("class built");
 
-
+                    //add global clas variable to 'save' class data for singlecase matches. this can be set based on a global bool set to true indicating singlecase match was found.
+                   //if(singlematch)
+                   //globalclass= *acronym.
                     KnownList.append(Sorter::print(*acronym));
                     delete acronym;
            }
@@ -691,12 +694,12 @@ bool Sorter::SingleCase(QString test_case, QString &input){
     QRegExp PLEndline3 ("(^" + test_case + ")(?=\\s)");
     QRegExp PLEndline4 ("(^" + test_case + ")($)");
 
-    //special case for IPR and IPR F reporting back Only 'F' leaving IPR F as unidentified.
-        if(test_case == 'F')
-        {
-            if(MultiCase(test_case, input))
-                return false;
-        }
+
+    //need to a logic that if a singlecase match is made the class will be saved a global boolean set to true and the processing of the acronym section is continued.
+
+    //additional: SingleCase slot's def needs to be updated to allow for a return vaule.  this will offer the option to have more than two possible return values.  currently set to be true or false.  the
+
+
 
     if(input_qtxt.contains(PLSpace1))
     {

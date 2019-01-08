@@ -1,0 +1,15 @@
+List of Acronyms that need searching logic tweaked for:
+II can hard code these in however Can i develop some way to skip the search for the single case process the current letter section then re-search the single case compared to the multicase vaules? 
+C di   if 
+IPR F
+
+sudo code
+load_list slot:
+after each iteration of the for loop that gets the acronyms from the classes.txt file check for the singlecase I.E 'A' 'B' has not passed
+
+I.E test case 'F' pops up.  single case will save the 'F' class for possible later use.  pause giving a true or false answer to finding the test case which will force the program to move on to the next acronym in the list.  each arcronym will be tested to check that the begaining starts with 'F'.  a global boolean will be set to true.  
+case 1:
+	if Singlecase is found within a multicase acronym which is also present in the input box txt then this will indicate a false positive.  the multicase will be removed from the "Unknown Listing" and the single case will be re-searched against the unknown listing.
+
+case 2:
+	singlecase is not found within other multicase acronym as indicated by the start of a new section i.e 'G'.  at this point the processing of the next section will pause and the singlecase 'F' will be processed.  print slot will be passed the 'saved' class for processing.
