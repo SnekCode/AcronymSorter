@@ -115,6 +115,7 @@ void Sorter::Save_Config(){
 
 void Sorter::Logic_Diagnostic()
 {
+
     QString Diag_List;
     int databasecount=0;
     QFile file(DataBaseFile);
@@ -142,6 +143,8 @@ void Sorter::Logic_Diagnostic()
                  Acronyms* acronym = new Acronyms(temp);
 
                  Diag_List.append(Sorter::print(*acronym));
+                 //if(iteration == 2)
+             //        Diag_List.replace(Diag_List.length(),1," ");
                  delete acronym;
                  arg.clear();
                  databasecount++;
@@ -150,10 +153,9 @@ void Sorter::Logic_Diagnostic()
     }//while
             ui->InputBox->setPlainText(Diag_List);
             Load_List();
-            //
             QString output_str = ui->OutputBox->toPlainText();
             QStringList output_list;
-            QString input_str = ui->OutputBox->toPlainText();
+            QString input_str = Diag_List;
             QStringList input_list;
             QString combo_str;
             int count = 0;
@@ -181,7 +183,7 @@ void Sorter::Logic_Diagnostic()
                         " Number of Acronyms: ??\n"
                         " Number Found:       ??\n\n\n\n";
 
-                while (count < databasecount){
+                while (count < output_list.count()){
 
                     save << input_list.at(count) << "\t"
                          << output_list.at(count) << "\t"
@@ -586,6 +588,7 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
        QStringList patterns {"\\s("+ QRegularExpression::escape(test_case) + ")\\s", "\\s(" + QRegularExpression::escape(test_case) + ")$",
                              "^("+ QRegularExpression::escape(test_case) + ")\\s"  , "^("+ QRegularExpression::escape(test_case) + ")$"};
         QString input_box_txt = ui->InputBox->toPlainText();
+
         for (auto i{0}; i < patterns.length(); i++)
         {
             QRegularExpression rx(patterns[i]);
@@ -593,6 +596,19 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
             QRegularExpressionMatch match2;
             match = rx.match(input_box_txt);
             match2 = rx.match(Unknown_txt);
+
+            if(test_case == 'F')
+            {
+                QRegularExpression rx2("R F");
+                QRegularExpressionMatch match_F;
+                match_F = rx2.match(input_box_txt);
+                if (match_F.hasMatch())
+                    return true;
+                else {
+                    return false;
+                }
+            }
+
             if(match.hasMatch())  //Need to build logic to check for repeated Acronyms.
                 {
                 if(match2.hasMatch()){
@@ -675,6 +691,12 @@ bool Sorter::SingleCase(QString test_case, QString &input){
     QRegExp PLEndline3 ("(^" + test_case + ")(?=\\s)");
     QRegExp PLEndline4 ("(^" + test_case + ")($)");
 
+    //special case for IPR and IPR F reporting back Only 'F' leaving IPR F as unidentified.
+        if(test_case == 'F')
+        {
+            if(MultiCase(test_case, input))
+                return false;
+        }
 
     if(input_qtxt.contains(PLSpace1))
     {
@@ -891,6 +913,7 @@ void Sorter::on_actionRun_Logic_Diagnostic_triggered()
    "in hopes to identify errors after review of the diagnostic output files. "))
     {
         Logic_Diagnostic();
+       // Logic_Diagnostic(2);
 
                 debug = false;
     }
