@@ -1,8 +1,9 @@
+#include "Acronyms.h"
 #include "sorter.h"
 #include "ui_sorter.h"
 #include "changelog.h"
+#include "verifyacro.h"
 #include <iostream>
-#include "Acronyms.h"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -74,10 +75,6 @@ void Sorter::Load_Config()
        ui->File_Dir->setText(Filehistory);
        }
        else{ui->File_Dir->setText("Program Default Database");}
-
-       //ui->font_size->setValue(fontsize);
-       ui->InputBox->setFontPointSize(fontsize);
-       ui->OutputBox->setFontPointSize(fontsize);
        debug = debugload;
        this->setGeometry(w_xpos, w_ypos, windowWidth, windowHeight);
 
@@ -285,7 +282,7 @@ void Sorter::Load_List()
                            //restructure to always pass the single case acronym to the class builder if found in input box.  the use of a third int val or possible global bool will determine if single case actually exists.  See TODO.txt for sudo code.
                           if(SingleCase(qtest_case, Unknown_txt))
                           {
-                          ClassPhrase(arg, *KnownPtr);
+                          ClassPhrase(arg);
                           Known_count++;
                           i = 0;
                           arg.clear();
@@ -296,7 +293,7 @@ void Sorter::Load_List()
                       {
                           if(MultiCase(qtest_case, Unknown_txt))
                           {
-                              ClassPhrase(arg, *KnownPtr);
+                              ClassPhrase(arg);
                               Known_count++;
                               i = 0;
                               arg.clear();
@@ -359,8 +356,26 @@ void Sorter::Load_List()
               }//for
           Unk_Str_count = std::to_string(unk_count);
           Known_Str_count = std::to_string(Known_count);
-          UnknownLoop(CapList, *UnknownPtr);
+          UnknownLoop(CapList);
           }//scope
+        // set font and size constant: v0.1.3 -UI branch.0 removed user option to control font.
+
+          ui->OutputBox->setFontFamily("Calibri");
+          ui->OutputBox->setFontPointSize(11);
+          ui->InputBox->setFontFamily("Calibri");
+          ui->InputBox->setFontPointSize(11);
+
+        //call to opne verifyAcro window allowing user to talior the results and to enter Definitions for the unknown acronyms
+          size_t total = (Class_Unk.size() + Class_Known.size());
+          while (iteration < total)
+          {
+              VerifyAcro verify;
+              verify.setModal(true);
+              verify.exec();
+              iteration ++;
+
+          }
+
 
        //sorter drop down logic
           if(ui->SortModeBox->currentText() == "All")
@@ -384,7 +399,7 @@ void Sorter::Load_List()
           return;
    }
 
-void Sorter::UnknownLoop (QStringList CapList, QString &UnknownList)
+void Sorter::UnknownLoop (QStringList CapList)
 {
 
     QStringList::iterator it = CapList.begin();
@@ -392,7 +407,7 @@ void Sorter::UnknownLoop (QStringList CapList, QString &UnknownList)
     while (it != CapList.end())
     {
         QString arg = CapList[i];
-        UnkClassPhrase(arg, UnknownList);
+        UnkClassPhrase(arg);
         ++i;
         ++it;
     }
@@ -400,16 +415,16 @@ void Sorter::UnknownLoop (QStringList CapList, QString &UnknownList)
 }
 
 
-void Sorter::UnkClassPhrase(QString arg, QString &UnknownList)
+
+void Sorter::UnkClassPhrase(QString arg)
 {
     Acronyms* acronym = new Acronyms(arg);
+    Class_Unk.push_back(*acronym);
 
-    UnknownList.append(Sorter::print(*acronym));
-    delete acronym;
     return;
 }
 
-void Sorter::ClassPhrase (QStringList &arg, QString &KnownList){
+void Sorter::ClassPhrase (QStringList &arg){
 
                    int def_num{0};
                    if(debug)
@@ -453,16 +468,15 @@ void Sorter::ClassPhrase (QStringList &arg, QString &KnownList){
                     //add global clas variable to 'save' class data for singlecase matches. this can be set based on a global bool set to true indicating singlecase match was found.
                    //if(singlematch)
                    //globalclass= *acronym.
-                    KnownList.append(Sorter::print(*acronym));
-                    delete acronym;
-           }
+                   Class_Known.push_back(*acronym);
+
+}
 
 QString Sorter::print(class Acronyms a)
 {
     if(debug)
     {
      return (*a.name + "\n");
-
     }
 
 
@@ -815,9 +829,9 @@ void Sorter::on_actionDebug_triggered()
 
 void Sorter::on_pushButton_clicked()
 {
-    int w = ui->centralWidget->width();
-    int h = ui->centralWidget->height();
-    ui->centralWidget->resize(w + 200 ,h + 200);
+    VerifyAcro test;
+    test.setModal(true);
+    test.exec();
 }
 
 void Sorter::on_Version_triggered()
@@ -920,4 +934,12 @@ void Sorter::on_actionRun_Logic_Diagnostic_triggered()
 
                 debug = false;
     }
+}
+
+void Sorter::on_InputBox_textChanged()
+{
+   // QString txt = ui->InputBox->toPlainText();
+    ui->InputBox->setFontFamily("Calibri");
+    ui->InputBox->setFontPointSize(11);
+    //ui->InputBox->setPlainText(txt);
 }

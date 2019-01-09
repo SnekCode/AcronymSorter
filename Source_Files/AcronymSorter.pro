@@ -28,17 +28,19 @@ SOURCES += \
         main.cpp \
         sorter.cpp \
     Acronyms.cpp \
-    changelog.cpp
+    changelog.cpp \
+    verifyacro.cpp
 
 HEADERS += \
         sorter.h \
     Acronyms.h \
     changelog.h \
-    Acronyms.rc
+    verifyacro.h
 
 FORMS += \
         sorter.ui \
-    changelog.ui
+    changelog.ui \
+    verifyacro.ui
 
 INCLUDEPATH += "$$PWD/data"
 
@@ -49,8 +51,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
-
-win32 {
- RC_FILE = Acronyms.rc
-}
 

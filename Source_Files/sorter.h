@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include "Acronyms.h"
+#include "verifyacro.h"
 #include<QFile>
 #include<QFileDialog>
 #include<QTextStream>
@@ -9,6 +10,7 @@
 #include <QString>
 #include <QTextFormat>
 #include <QFont>
+//varibles for handling verification window for Acronyms with more than 1 def.
 
 namespace Ui {
 class Sorter;
@@ -17,7 +19,7 @@ class Sorter;
 class Sorter : public QMainWindow
 {
     Q_OBJECT
-friend Acronyms;
+
 private:
 //defaults
 QString defaultfile = ":/Data/Classes.txt";
@@ -36,9 +38,15 @@ int w_ypos = 0;
 int fontsize = 8;
 
 public:
+
 QString DataBaseFile = defaultfile;
 bool filesave = false;
 QString Filehistory;
+static std::vector <Acronyms> Class_Unk;
+static std::vector <Acronyms> Class_Known;
+static size_t iteration;
+
+
 
     explicit Sorter(QWidget *parent = nullptr);
     ~Sorter();
@@ -46,9 +54,9 @@ QString Filehistory;
 public slots:
     void Load_List();
     void on_SortBtn_clicked();
-    void UnkClassPhrase(QString arg, QString &UnkownList);
-    void ClassPhrase(QStringList &arg, QString &printList);
-    void UnknownLoop (QStringList CapList, QString &UnkownList);
+    void UnkClassPhrase(QString arg);
+    void ClassPhrase(QStringList &arg);
+    void UnknownLoop (QStringList CapList);
     QString print (class Acronyms a);
     bool SingleCase(QString arg, QString &input);
     bool MultiCase(QString arg, QString &input);
@@ -79,5 +87,9 @@ private slots:
     void on_font_size_valueChanged(int arg1);
     void on_actionRun_Logic_Diagnostic_triggered();
     void Logic_Diagnostic();
+    void on_InputBox_textChanged();
+
+    friend class Acronyms;
+    friend class VerifyAcro;
 };
 

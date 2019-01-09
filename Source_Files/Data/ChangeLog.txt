@@ -1,6 +1,8 @@
 -0.1.3-
 1. Corrected logic error in acronym search loop.  -TODO add logic to account for repeats.
-2.
+2. Removed Font Control options from User.  Font Family and size are now enforced and pasted text will be updated to that constant.
+3. Set the input txt box minimum size constraint equal to max sized EPR bullet. -TODO- add options tab to select type of document i.e. 1206 has different line size than 910.
+4.
 
 -0.1.2-
 1. Identified critical RegEx search pattern error.  In the process dicovered Qt 5.0 added a new class QRegularExpressions.  This regex version offers better matching capabliies over the standard QRegEx
