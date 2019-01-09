@@ -75,7 +75,7 @@ void Sorter::Load_Config()
        }
        else{ui->File_Dir->setText("Program Default Database");}
 
-       ui->font_size->setValue(fontsize);
+       //ui->font_size->setValue(fontsize);
        ui->InputBox->setFontPointSize(fontsize);
        ui->OutputBox->setFontPointSize(fontsize);
        debug = debugload;
@@ -876,7 +876,7 @@ void Sorter::on_actionAll_triggered()
     this->setGeometry(530,388,1500,400);
     DataBaseFile = defaultfile;
     filesave = false;
-    ui->font_size->setValue(defaultfontsize);
+    //ui->font_size->setValue(defaultfontsize);
     ui->File_Dir->setText("Program Default Database");
 }
 
