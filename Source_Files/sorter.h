@@ -91,7 +91,6 @@ private slots:
     void on_actionRestore_DataBase_File_triggered();
     void on_actionChoose_Custom_DataBase_triggered();
     void on_actionAll_triggered();
-    void on_font_size_valueChanged(int arg1);
     void on_actionRun_Logic_Diagnostic_triggered();
     void Logic_Diagnostic();
     void on_InputBox_textChanged();

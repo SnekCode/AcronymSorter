@@ -447,22 +447,12 @@ void Sorter::Load_List()
 
 
                       Sorter::Class_list_all_f0.push_back(format0);
-
-                      if(*Class_all[iteration]->sort_num == 1)
-                          Sorter::Class_list_Known_f0.push_back(format0);
-
-                      if(*Class_all[iteration]->sort_num == 2)
-                          Sorter::Class_list_Unk_f0.push_back(format0);
-
+                      Sorter::Class_list_Known_f0.push_back(format0);
 
                       Sorter::Class_list_all_f1.push_back(format1);
+                      Sorter::Class_list_Known_f1.push_back(format1);
 
-                      if(*Class_all[iteration]->sort_num == 1)
-                          Sorter::Class_list_Known_f1.push_back(format1);
-
-                      if(*Class_all[iteration]->sort_num == 2)
-                          Sorter::Class_list_Unk_f1.push_back(format1);
-                    }
+          }
                   iteration++;
               }
 
@@ -1056,25 +1046,7 @@ void Sorter::on_actionAll_triggered()
     ui->File_Dir->setText("Program Default Database");
 }
 
-void Sorter::on_font_size_valueChanged(int arg1)
-{
-    fontsize = arg1;
-    ui->InputBox->setFontPointSize(arg1);
-    ui->OutputBox->setFontPointSize(arg1);
-    QString inbox_cpy = ui->InputBox->toPlainText();
-    QString outbox_cpy = ui->OutputBox->toPlainText();
 
-    if(!inbox_cpy.isEmpty())
-    {
-    ui->InputBox->clear();
-    ui->InputBox->setPlainText(inbox_cpy);
-    }
-    if(!outbox_cpy.isEmpty())
-    {
-        ui->OutputBox->clear();
-        ui->OutputBox->setPlainText(outbox_cpy);
-    }
-}
 
 void Sorter::on_actionRun_Logic_Diagnostic_triggered()
 {

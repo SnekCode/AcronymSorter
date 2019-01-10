@@ -116,21 +116,12 @@ void VerifyAcro::on_buttonBox_accepted()
     QString format1 = def1 + " (" + name +"); ";
 
          Sorter::Class_list_all_f0.push_back(format0);
+         Sorter::Class_list_Known_f0.push_back(format0);
 
-         if(*Sorter::Class_all[Sorter::iteration]->sort_num == 1)
-            Sorter::Class_list_Known_f0.push_back(format0);
-
-         if(*Sorter::Class_all[Sorter::iteration]->sort_num == 2)
-            Sorter::Class_list_Unk_f0.push_back(format0);
 
 
         Sorter::Class_list_all_f1.push_back(format1);
-
-        if(*Sorter::Class_all[Sorter::iteration]->sort_num == 1)
-           Sorter::Class_list_Known_f1.push_back(format1);
-
-        if(*Sorter::Class_all[Sorter::iteration]->sort_num == 2)
-           Sorter::Class_list_Unk_f1.push_back(format1);
+        Sorter::Class_list_Known_f1.push_back(format1);
 
     }
 
@@ -140,24 +131,11 @@ void VerifyAcro::on_buttonBox_accepted()
         QString format0 = name + " (" + def1 +"); ";
         QString format1 = def1 + " (" + name +"); ";
 
-            if(Sorter::SortModeBoxIndex == 0)
             Sorter::Class_list_all_f0.push_back(format0);
+            Sorter::Class_list_Unk_f0.push_back(format0);
 
-            if(Sorter::SortModeBoxIndex == 1)
-                Sorter::Class_list_Known_f0.push_back(format0);
-
-            if(Sorter::SortModeBoxIndex == 2)
-                Sorter::Class_list_Unk_f0.push_back(format0);
-
-
-            if(Sorter::SortModeBoxIndex == 0)
             Sorter::Class_list_all_f1.push_back(format1);
-
-            if(Sorter::SortModeBoxIndex == 1)
-                Sorter::Class_list_Known_f1.push_back(format1);
-
-            if(Sorter::SortModeBoxIndex == 2)
-                Sorter::Class_list_Unk_f1.push_back(format1);
+            Sorter::Class_list_Unk_f1.push_back(format1);
     }
 
     this->close();
