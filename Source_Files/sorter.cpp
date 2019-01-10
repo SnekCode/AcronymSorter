@@ -3,6 +3,8 @@
 #include "ui_sorter.h"
 #include "changelog.h"
 #include "verifyacro.h"
+#include <algorithm>
+#include <functional>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -13,6 +15,19 @@
 #include <QDir>
 #include <QDebug>
 #include <QRegExp>
+
+std::vector <Acronyms*> Sorter::Class_Known;
+std::vector <Acronyms*> Sorter::Class_Unk;
+std::vector <Acronyms*> Sorter::Class_all;
+QString Sorter::Class_list_all_f0;
+QString Sorter::Class_list_Known_f0;
+QString Sorter::Class_list_Unk_f0;
+QString Sorter::Class_list_all_f1;
+QString Sorter::Class_list_Known_f1;
+QString Sorter::Class_list_Unk_f1;
+size_t Sorter::iteration;
+int Sorter::SortModeBoxIndex;
+int Sorter::OutputFormatBoxIndex;
 
 Sorter::Sorter(QWidget *parent) :
     QMainWindow(parent),
@@ -207,8 +222,16 @@ void Sorter::Logic_Diagnostic()
                 QMessageBox::information(this, "Logic Diagnostic", msg);
 }
 
+
 void Sorter::Load_List()
 {
+    Class_list_Unk_f0.clear();
+    Class_list_all_f0.clear();
+    Class_list_Known_f0.clear();
+    Class_list_Unk_f1.clear();
+    Class_list_all_f1.clear();
+    Class_list_Known_f1.clear();
+    iteration = 0;
     QString input_qtxt = ui->InputBox->toPlainText();
         //these are used to store the findings of the REGEX functions
         QString KnownList; //used to save printed Known Acronyms
@@ -358,6 +381,33 @@ void Sorter::Load_List()
           Known_Str_count = std::to_string(Known_count);
           UnknownLoop(CapList);
           }//scope
+
+          // create AlphaBet sorter
+          size_t total = (Class_Unk.size() + Class_Known.size());
+
+          if(Class_Unk.size() != 0)
+          {
+          for (size_t i = 0; i < Class_Unk.size(); i++)
+          {
+              Class_all.push_back(Class_Unk[i]);
+          }
+          }
+          if(Class_Known.size() != 0)
+          {
+          for (size_t i = 0; i < Class_Known.size(); i++)
+          {
+              Class_all.push_back(Class_Known[i]);
+          }
+          }
+          //Sort logic works 0.1.3_uI_update.0
+          std::sort(Class_all.begin(),
+                    Class_all.end(),
+                    [](const Acronyms* lhs, const Acronyms* rhs)
+          {
+              return *lhs->name < *rhs->name;
+          });
+
+
         // set font and size constant: v0.1.3 -UI branch.0 removed user option to control font.
 
           ui->OutputBox->setFontFamily("Calibri");
@@ -366,38 +416,110 @@ void Sorter::Load_List()
           ui->InputBox->setFontPointSize(11);
 
         //call to opne verifyAcro window allowing user to talior the results and to enter Definitions for the unknown acronyms
-          size_t total = (Class_Unk.size() + Class_Known.size());
+          QString test1 = "Nodef";
+          QString test2 = "???";
+
           while (iteration < total)
           {
+          if (*Class_all[iteration]->def1 == test2)
+          {
+          VerifyAcro verify;
+          verify.setModal(true);
+          verify.exec();
+          iteration ++;
+          continue;
+          }
+          else if (*Class_all[iteration]->def2 != test1)
+              {
               VerifyAcro verify;
               verify.setModal(true);
               verify.exec();
               iteration ++;
+              continue;
+              }
+              else {
 
+                  Class_all[iteration]->set_num(1);
+                  QString name  = *Class_all[iteration]->name;
+                  QString def1 = *Class_all[iteration]->def1;
+                  QString format0 = name + " (" + def1 +"); ";
+                  QString format1 = def1 + " (" + name +"); ";
+
+
+                      Sorter::Class_list_all_f0.push_back(format0);
+
+                      if(*Class_all[iteration]->sort_num == 1)
+                          Sorter::Class_list_Known_f0.push_back(format0);
+
+                      if(*Class_all[iteration]->sort_num == 2)
+                          Sorter::Class_list_Unk_f0.push_back(format0);
+
+
+                      Sorter::Class_list_all_f1.push_back(format1);
+
+                      if(*Class_all[iteration]->sort_num == 1)
+                          Sorter::Class_list_Known_f1.push_back(format1);
+
+                      if(*Class_all[iteration]->sort_num == 2)
+                          Sorter::Class_list_Unk_f1.push_back(format1);
+                    }
+                  iteration++;
+              }
+
+
+          //memory management deleting all saved Acronyms
+          ClearClassVector(Class_Known);
+          ClearClassVector(Class_Unk);
+          Class_all.clear();
+          if(OutputFormatBoxIndex == 0){
+              if(Sorter::SortModeBoxIndex == 0)
+                  ui->OutputBox->setPlainText(Class_list_all_f0);
+              if(Sorter::SortModeBoxIndex == 1)
+                  ui->OutputBox->setPlainText(Class_list_Known_f0);
+              if(Sorter::SortModeBoxIndex == 2)
+                  ui->OutputBox->setPlainText(Class_list_Unk_f0);
+            }
+          if(OutputFormatBoxIndex == 1){
+              if(Sorter::SortModeBoxIndex == 0)
+                  ui->OutputBox->setPlainText(Class_list_all_f1);
+              if(Sorter::SortModeBoxIndex == 1)
+                  ui->OutputBox->setPlainText(Class_list_Known_f1);
+              if(Sorter::SortModeBoxIndex == 2)
+                  ui->OutputBox->setPlainText(Class_list_Unk_f1);
           }
 
 
+          //0.1.3 UI Update should obsolete this
        //sorter drop down logic
-          if(ui->SortModeBox->currentText() == "All")
-            {
-              QString all;
-              all.append(KnownList);
-              all.append(UnknownList);
-              ui->OutputBox->setPlainText(all);
-              ui->statusBar->showMessage(
-                          "Search Complete Known Acroynms: "
-                          + QString::fromStdString(Known_Str_count)
-                          + "\t|\tUnknown Acroynms: "
-                          + QString::fromStdString(Unk_Str_count), 5000);
-            }
-          if(ui->SortModeBox->currentText() == "Known")
-              ui->OutputBox->setText(KnownList);
+//          if(ui->SortModeBox->currentText() == "All")
+//            {
+//              QString all;
+//              all.append(KnownList);
+//              all.append(UnknownList);
+//              ui->OutputBox->setPlainText(all);
+//              ui->statusBar->showMessage(
+//                          "Search Complete Known Acroynms: "
+//                          + QString::fromStdString(Known_Str_count)
+//                          + "\t|\tUnknown Acroynms: "
+//                          + QString::fromStdString(Unk_Str_count), 5000);
+//            }
+//          if(ui->SortModeBox->currentText() == "Known")
+//              ui->OutputBox->setText(KnownList);
 
-          if(ui->SortModeBox->currentText() == "Unknown")
-              ui->OutputBox->append(UnknownList);
+//          if(ui->SortModeBox->currentText() == "Unknown")
+//              ui->OutputBox->append(UnknownList);
 
           return;
    }
+
+void Sorter::ClearClassVector(std::vector <Acronyms*> &a)
+{
+    for (size_t i = 0; i < a.size(); i++)
+    delete a[i];
+
+    a.clear();
+
+}
 
 void Sorter::UnknownLoop (QStringList CapList)
 {
@@ -419,7 +541,7 @@ void Sorter::UnknownLoop (QStringList CapList)
 void Sorter::UnkClassPhrase(QString arg)
 {
     Acronyms* acronym = new Acronyms(arg);
-    Class_Unk.push_back(*acronym);
+    Class_Unk.push_back(acronym);
 
     return;
 }
@@ -468,7 +590,7 @@ void Sorter::ClassPhrase (QStringList &arg){
                     //add global clas variable to 'save' class data for singlecase matches. this can be set based on a global bool set to true indicating singlecase match was found.
                    //if(singlematch)
                    //globalclass= *acronym.
-                   Class_Known.push_back(*acronym);
+                  Class_Known.push_back(acronym);
 
 }
 
@@ -479,113 +601,122 @@ QString Sorter::print(class Acronyms a)
      return (*a.name + "\n");
     }
 
+    if(ui->OutputFormatBox->currentIndex() == 0)
+    return (*a.name + " (" + *a.def1 + "); ");
 
-    if (*a.def_num == 1) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-        return (*a.name + " (" + *a.def1 + "); ");
-
-        if(ui->OutputFormatBox->currentIndex() == 1)
-        return (*a.def1 + " (" + *a.name + "); ");
-
-    }if (*a.def_num == 2) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-        return                           (*a.name + " ("
-                                         + *a.def1 + " / "
-                                         + *a.def2 + "); ");
-
-        if(ui->OutputFormatBox->currentIndex() == 1)
-        return                           (*a.def1 + " / "
-                                         + *a.def2 + " ("
-                                         + *a.name + "); ");
-
-    }if (*a.def_num == 3) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-          return                         (*a.name
-                                         + " (" + *a.def1
-                                         + " / " + *a.def2
-                                         + " / " + *a.def3
-                                         + "); ");
-        if(ui->OutputFormatBox->currentIndex() == 1)
-        return                           (*a.def1
-                                          + " / " + *a.def2
-                                          + " / " + *a.def3
-                                          + " (" + *a.name + "); ");
-
-    }if (*a.def_num == 4) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-        return                         (*a.name
-                                       + " (" + *a.def1
-                                       + " / " + *a.def2
-                                       + " / " + *a.def3
-                                       + " / " + *a.def4
-                                       + "); ");
-
-        if(ui->OutputFormatBox->currentIndex() == 1)
-            return                           (*a.def1
-                                              + " / " + *a.def2
-                                              + " / " + *a.def3
-                                              + " / " + *a.def4
-                                              + " (" + *a.name + "); ");
+    if(ui->OutputFormatBox->currentIndex() == 1)
+    return (*a.def1 + " (" + *a.name + "); ");
 
 
-    }if (*a.def_num == 5) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-        return (*a.name
-                                       + " (" + *a.def1
-                                       + " / " + *a.def2
-                                       + " / " + *a.def3
-                                       + " / " + *a.def4
-                                       + " / " + *a.def5
-                                       + "); ");
-        if(ui->OutputFormatBox->currentIndex() == 1)
-        return                           (*a.def1
-                                         + " / " + *a.def2
-                                         + " / " + *a.def3
-                                         + " / " + *a.def4
-                                         + " / " + *a.def5
-                                         + " (" + *a.name + "); ");
-
-    }if (*a.def_num == 6) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-       return (*a.name
-                                       + " (" + *a.def1
-                                       + " / " + *a.def2
-                                       + " / " + *a.def3
-                                       + " / " + *a.def4
-                                       + " / " + *a.def5
-                                       + " / " + *a.def6
-                                       + "); ");
-        if(ui->OutputFormatBox->currentIndex() == 1)
-            return                           (*a.def1
-                                             + " / " + *a.def2
-                                             + " / " + *a.def3
-                                             + " / " + *a.def4
-                                             + " / " + *a.def5
-                                             + " / " + *a.def6
-                                             + " (" + *a.name + "); ");
 
 
-    }if (*a.def_num == 7) {
-        if(ui->OutputFormatBox->currentIndex() == 0)
-        return (*a.name
-                                       + " (" + *a.def1
-                                       + " / " + *a.def2
-                                       + " / " + *a.def3
-                                       + " / " + *a.def4
-                                       + " / " + *a.def5
-                                       + " / " + *a.def6
-                                       + " / " +*a.def7
-                                       + "); ");
-        if(ui->OutputFormatBox->currentIndex() == 1)
-            return                           (*a.def1
-                                             + " / " + *a.def2
-                                             + " / " + *a.def3
-                                             + " / " + *a.def4
-                                             + " / " + *a.def5
-                                             + " / " + *a.def6
-                                             + " / " + *a.def7
-                                             + " (" + *a.name + "); ");
-    }
+    //this sequence will be obsolete when the Verify Acro class is complete:  saving for now;
+//    if (*a.def_num == 1) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//        return (*a.name + " (" + *a.def1 + "); ");
+
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//        return (*a.def1 + " (" + *a.name + "); ");
+
+//    }if (*a.def_num == 2) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//        return                           (*a.name + " ("
+//                                         + *a.def1 + " / "
+//                                         + *a.def2 + "); ");
+
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//        return                           (*a.def1 + " / "
+//                                         + *a.def2 + " ("
+//                                         + *a.name + "); ");
+
+//    }if (*a.def_num == 3) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//          return                         (*a.name
+//                                         + " (" + *a.def1
+//                                         + " / " + *a.def2
+//                                         + " / " + *a.def3
+//                                         + "); ");
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//        return                           (*a.def1
+//                                          + " / " + *a.def2
+//                                          + " / " + *a.def3
+//                                          + " (" + *a.name + "); ");
+
+//    }if (*a.def_num == 4) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//        return                         (*a.name
+//                                       + " (" + *a.def1
+//                                       + " / " + *a.def2
+//                                       + " / " + *a.def3
+//                                       + " / " + *a.def4
+//                                       + "); ");
+
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//            return                           (*a.def1
+//                                              + " / " + *a.def2
+//                                              + " / " + *a.def3
+//                                              + " / " + *a.def4
+//                                              + " (" + *a.name + "); ");
+
+
+//    }if (*a.def_num == 5) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//        return (*a.name
+//                                       + " (" + *a.def1
+//                                       + " / " + *a.def2
+//                                       + " / " + *a.def3
+//                                       + " / " + *a.def4
+//                                       + " / " + *a.def5
+//                                       + "); ");
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//        return                           (*a.def1
+//                                         + " / " + *a.def2
+//                                         + " / " + *a.def3
+//                                         + " / " + *a.def4
+//                                         + " / " + *a.def5
+//                                         + " (" + *a.name + "); ");
+
+//    }if (*a.def_num == 6) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//       return (*a.name
+//                                       + " (" + *a.def1
+//                                       + " / " + *a.def2
+//                                       + " / " + *a.def3
+//                                       + " / " + *a.def4
+//                                       + " / " + *a.def5
+//                                       + " / " + *a.def6
+//                                       + "); ");
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//            return                           (*a.def1
+//                                             + " / " + *a.def2
+//                                             + " / " + *a.def3
+//                                             + " / " + *a.def4
+//                                             + " / " + *a.def5
+//                                             + " / " + *a.def6
+//                                             + " (" + *a.name + "); ");
+
+
+//    }if (*a.def_num == 7) {
+//        if(ui->OutputFormatBox->currentIndex() == 0)
+//        return (*a.name
+//                                       + " (" + *a.def1
+//                                       + " / " + *a.def2
+//                                       + " / " + *a.def3
+//                                       + " / " + *a.def4
+//                                       + " / " + *a.def5
+//                                       + " / " + *a.def6
+//                                       + " / " +*a.def7
+//                                       + "); ");
+//        if(ui->OutputFormatBox->currentIndex() == 1)
+//            return                           (*a.def1
+//                                             + " / " + *a.def2
+//                                             + " / " + *a.def3
+//                                             + " / " + *a.def4
+//                                             + " / " + *a.def5
+//                                             + " / " + *a.def6
+//                                             + " / " + *a.def7
+//                                             + " (" + *a.name + "); ");
+//    }
 
     return "error";
 }
@@ -767,7 +898,23 @@ void Sorter::on_OutputFormatBox_currentIndexChanged()
 {
     qDebug() << OutputFormatBoxIndex;
     OutputFormatBoxIndex = ui->OutputFormatBox->currentIndex();
-    Sorter::Load_List();
+
+    if(OutputFormatBoxIndex == 0){
+        if(Sorter::SortModeBoxIndex == 0)
+            ui->OutputBox->setPlainText(Class_list_all_f0);
+        if(Sorter::SortModeBoxIndex == 1)
+            ui->OutputBox->setPlainText(Class_list_Known_f0);
+        if(Sorter::SortModeBoxIndex == 2)
+            ui->OutputBox->setPlainText(Class_list_Unk_f0);
+      }
+    if(OutputFormatBoxIndex == 1){
+        if(Sorter::SortModeBoxIndex == 0)
+            ui->OutputBox->setPlainText(Class_list_all_f1);
+        if(Sorter::SortModeBoxIndex == 1)
+            ui->OutputBox->setPlainText(Class_list_Known_f1);
+        if(Sorter::SortModeBoxIndex == 2)
+            ui->OutputBox->setPlainText(Class_list_Unk_f1);
+    }
 }
 
 void Sorter::on_action_Open_triggered()
@@ -862,7 +1009,22 @@ void Sorter::on_SortModeBox_currentIndexChanged()
     if(debug)
     qDebug() << ui->SortModeBox->currentIndex();
 
-    Sorter::Load_List();
+    if(OutputFormatBoxIndex == 0){
+        if(Sorter::SortModeBoxIndex == 0)
+            ui->OutputBox->setPlainText(Class_list_all_f0);
+        if(Sorter::SortModeBoxIndex == 1)
+            ui->OutputBox->setPlainText(Class_list_Known_f0);
+        if(Sorter::SortModeBoxIndex == 2)
+            ui->OutputBox->setPlainText(Class_list_Unk_f0);
+      }
+    if(OutputFormatBoxIndex == 1){
+        if(Sorter::SortModeBoxIndex == 0)
+            ui->OutputBox->setPlainText(Class_list_all_f1);
+        if(Sorter::SortModeBoxIndex == 1)
+            ui->OutputBox->setPlainText(Class_list_Known_f1);
+        if(Sorter::SortModeBoxIndex == 2)
+            ui->OutputBox->setPlainText(Class_list_Unk_f1);
+    }
 }
 
 void Sorter::on_actionRestore_DataBase_File_triggered()
@@ -892,12 +1054,6 @@ void Sorter::on_actionAll_triggered()
     filesave = false;
     //ui->font_size->setValue(defaultfontsize);
     ui->File_Dir->setText("Program Default Database");
-}
-
-void Sorter::on_fontComboBox_currentFontChanged(const QFont &f)
-{
-    ui->InputBox->setFont(f);
-    ui->OutputBox->setFont(f);
 }
 
 void Sorter::on_font_size_valueChanged(int arg1)
@@ -943,3 +1099,4 @@ void Sorter::on_InputBox_textChanged()
     ui->InputBox->setFontPointSize(11);
     //ui->InputBox->setPlainText(txt);
 }
+

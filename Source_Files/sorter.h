@@ -1,5 +1,5 @@
 #pragma once
-
+#include <algorithm>
 #include <QMainWindow>
 #include "Acronyms.h"
 #include "verifyacro.h"
@@ -28,8 +28,7 @@ QString Diag_File = "Diag.csv";
 int defaultfontsize = 8;
 
 //properties
-int OutputFormatBoxIndex = 0;
-int SortModeBoxIndex = 0;
+
 bool debug = false;
 int windowWidth = 1500;
 int windowHeight = 400;
@@ -42,11 +41,18 @@ public:
 QString DataBaseFile = defaultfile;
 bool filesave = false;
 QString Filehistory;
-static std::vector <Acronyms> Class_Unk;
-static std::vector <Acronyms> Class_Known;
+static std::vector <Acronyms*> Class_Unk;
+static std::vector <Acronyms*> Class_Known;
+static std::vector <Acronyms*> Class_all;
+static QString Class_list_Known_f0;
+static QString Class_list_Unk_f0;
+static QString Class_list_all_f0;
+static QString Class_list_Known_f1;
+static QString Class_list_Unk_f1;
+static QString Class_list_all_f1;
 static size_t iteration;
-
-
+static int OutputFormatBoxIndex;
+static int SortModeBoxIndex;
 
     explicit Sorter(QWidget *parent = nullptr);
     ~Sorter();
@@ -62,6 +68,7 @@ public slots:
     bool MultiCase(QString arg, QString &input);
     void Save_Config();
 
+
 public:
     Ui::Sorter *ui;
 
@@ -69,6 +76,7 @@ public:
 
 private slots:
     void Load_Config();
+    void ClearClassVector(std::vector <Acronyms*> & a);
     void on_OutputFormatBox_currentIndexChanged();
     void on_action_Open_triggered();
     void on_actionExport_triggered();
@@ -83,7 +91,6 @@ private slots:
     void on_actionRestore_DataBase_File_triggered();
     void on_actionChoose_Custom_DataBase_triggered();
     void on_actionAll_triggered();
-    void on_fontComboBox_currentFontChanged(const QFont &f);
     void on_font_size_valueChanged(int arg1);
     void on_actionRun_Logic_Diagnostic_triggered();
     void Logic_Diagnostic();
@@ -91,5 +98,6 @@ private slots:
 
     friend class Acronyms;
     friend class VerifyAcro;
+
 };
 

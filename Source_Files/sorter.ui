@@ -275,13 +275,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>new window test button</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </widget>
@@ -874,14 +867,8 @@
     <addaction name="menuRestore_Settings"/>
     <addaction name="actionRun_Logic_Diagnostic"/>
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAbout"/>
-   <addaction name="menuView"/>
    <addaction name="menuTools"/>
    <addaction name="menuAbout_2"/>
   </widget>
@@ -1075,6 +1062,9 @@
    </property>
   </action>
   <action name="actionDebug">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normaloff>:/img/images/debug.png</normaloff>
@@ -1146,6 +1136,9 @@
    </property>
   </action>
   <action name="actionRun_Logic_Diagnostic">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Run Logic Diagnostic</string>
    </property>

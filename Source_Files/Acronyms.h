@@ -6,6 +6,7 @@
 class Acronyms
 {
 public:
+    friend class VerifyAcro;
     QString *name{};
     QString *def1{};
     QString *def2{};
@@ -15,18 +16,20 @@ public:
     QString *def6{};
     QString *def7{};  //highest counted number of definitions on JP1-02
     int *def_num{nullptr};
-	// Constructor will take args with defaults
+    int *sort_num = nullptr;
+    // Constructor will take args with defaults
     Acronyms(QString name, QString def1, QString def2, QString def3, QString def4, QString def5, QString def6, QString def7, int def_num);
     Acronyms(QString name);
     //copy constructor
     Acronyms(const Acronyms &source);
-	//move constructor
+    //move constructor
     //Acronyms(Acronyms &&source);
-	~Acronyms();
+    ~Acronyms();
 
-	//methods
+    //methods
 
-	int get_num();
+    int get_num();
+    void set_num(int a);
     QString get_name();
  };
 

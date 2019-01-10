@@ -14,6 +14,11 @@ public:
     VerifyAcro(QWidget *parent = nullptr);
     ~VerifyAcro();
 
+private slots:
+    void on_pushButton_clicked();
+
+    void on_buttonBox_accepted();
+
 private:
     Ui::VerifyAcro *ui;
 

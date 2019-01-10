@@ -12,24 +12,24 @@
 Acronyms::Acronyms(QString n, QString d1, QString d2, QString d3, QString d4, QString d5, QString d6, QString d7, int dnum)
 {
     name = new QString;
-	*name = n;
+    *name = n;
     def1 = new QString;
-	*def1 = d1;
+    *def1 = d1;
     def2 = new QString;
-	*def2 = d2;
+    *def2 = d2;
     def3 = new QString;
-	*def3 = d3;
+    *def3 = d3;
     def4 = new QString;
-	*def4 = d4;
+    *def4 = d4;
     def5 = new QString;
-	*def5 = d5;
+    *def5 = d5;
     def6 = new QString;
-	*def6 = d6;
+    *def6 = d6;
     def7 = new QString;
-	*def7 = d7;
+    *def7 = d7;
     def_num = new int;
     *def_num = dnum;
-	//std::cout << "Constructed " << *name;
+    //std::cout << "Constructed " << *name;
 };
 
 //single aurgument constructor
@@ -39,18 +39,18 @@ Acronyms::Acronyms(QString n)
     *name = n;
     def1 = new QString;
     *def1 = "???";
-//    def2 = new QString;
-//	*def2 = "Nodef";
-//    def3 = new QString;
-//	*def3 = "Nodef";
-//    def4 = new QString;
-//	*def4 = "Nodef";
-//    def5 = new QString;
-//	*def5 = "Nodef";
-//    def6 = new QString;
-//	*def6 = "Nodef";
-//    def7 = new QString;
-//	*def7 = "Nodef";
+    def2 = new QString;
+    *def2 = "Nodef";
+    def3 = new QString;
+    *def3 = "Nodef";
+    def4 = new QString;
+    *def4 = "Nodef";
+    def5 = new QString;
+    *def5 = "Nodef";
+    def6 = new QString;
+    *def6 = "Nodef";
+    def7 = new QString;
+    *def7 = "Nodef";
     def_num = new int;
     *def_num = 1;
     //std::cout << "Constructed " << *name;
@@ -99,13 +99,17 @@ Acronyms::Acronyms(const Acronyms &source)
 
 Acronyms::~Acronyms()
 {
-	//std::cout << "deleted " << name;
+    //std::cout << "deleted " << name;
 
 }
 
+void Acronyms::set_num (int a)
+{
+    sort_num = &a;
+}
 QString Acronyms::get_name()
 {
-	return *name;
+    return *name;
 }
 
 

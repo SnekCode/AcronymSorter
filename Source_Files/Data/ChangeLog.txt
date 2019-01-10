@@ -1,8 +1,13 @@
+-0.1.4-
+UI Update
+1. Acronyms with more than 1 definition or undefined Acronyms will now prompt the user with a Dialog box option to select or enter the intended acronym definition.
+2. Unknown and Known Acronyms now are sorted alhabetically.
+
+
 -0.1.3-
 1. Corrected logic error in acronym search loop.  -TODO add logic to account for repeats.
 2. Removed Font Control options from User.  Font Family and size are now enforced and pasted text will be updated to that constant.
 3. Set the input txt box minimum size constraint equal to max sized EPR bullet. -TODO- add options tab to select type of document i.e. 1206 has different line size than 910.
-4.
 
 -0.1.2-
 1. Identified critical RegEx search pattern error.  In the process dicovered Qt 5.0 added a new class QRegularExpressions.  This regex version offers better matching capabliies over the standard QRegEx
@@ -11,7 +16,7 @@
 4. Added Icons for fun!
 5. Created DataBase Diagnostic tool which tests itself against the RegEx logic.  the tool then creates a .txt file that can reviewed for errors.  As of version 0.1.2 no errors occur when using this tool and all 6915 acronyms are found!  This tool will take aproximently 30 - 45 seconds to finish.
 6. Changelog window under the About -> Version info tab is now has it's own built in resource file.  Text in window is loaded via stream.
-
+6. Git source control Added.
 
 -0.1.1-
 1. Implemeted qt resource files to handle acronym class data. the Acronym list is hard wired into the binary code.
@@ -26,7 +31,7 @@
 
 -0.1.0- gui update
 1. Redesigned the source files to use C++ Qt framework
-2. Solidified Logic with RegEx 
+2. Solidified Logic with RegEx
 3. Build gui around two text input boxes allowing the user more freedom when entering data
 
 -0.0.2 - Logic build
