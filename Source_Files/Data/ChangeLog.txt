@@ -2,6 +2,7 @@
 UI Update
 1. Acronyms with more than 1 definition or undefined Acronyms will now prompt the user with a Dialog box option to select or enter the intended acronym definition.
 2. Unknown and Known Acronyms now are sorted alhabetically.
+3. When using the Export / save option under file: .txt is set as default and dir is defaulted to Desktop.
 
 
 -0.1.3-

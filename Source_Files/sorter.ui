@@ -552,7 +552,6 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionFont"/>
     <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
@@ -1141,11 +1140,6 @@
    </property>
    <property name="text">
     <string>Run Logic Diagnostic</string>
-   </property>
-  </action>
-  <action name="actionFont">
-   <property name="text">
-    <string>Font</string>
    </property>
   </action>
  </widget>

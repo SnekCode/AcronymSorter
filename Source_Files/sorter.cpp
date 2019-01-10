@@ -15,6 +15,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QRegExp>
+#include <QStandardPaths>
 
 std::vector <Acronyms*> Sorter::Class_Known;
 std::vector <Acronyms*> Sorter::Class_Unk;
@@ -235,7 +236,6 @@ void Sorter::Load_List()
     QString input_qtxt = ui->InputBox->toPlainText();
         //these are used to store the findings of the REGEX functions
         QString KnownList; //used to save printed Known Acronyms
-        QString *KnownPtr = &KnownList;
         int Known_count{0};
         QString Unknown_txt = input_qtxt;
     if(input_qtxt.size() == 0)
@@ -342,7 +342,6 @@ void Sorter::Load_List()
 
           //Unknown Class Build
           QString UnknownList;
-          QString* UnknownPtr = &UnknownList;
           QStringList CapList;
           std::string Unk_Str_count;
           std::string Known_Str_count;
@@ -924,7 +923,9 @@ void Sorter::on_action_Open_triggered()
 
 void Sorter::on_actionExport_triggered()
 {
-    QString Filename = QFileDialog::getSaveFileName(this, "Save File as");
+    QString path =
+              QString("%1/SorterExport.txt").arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+    QString Filename = QFileDialog::getSaveFileName(this, "Save File as", path, tr("Text Files (*.txt)"));
     QFile file(Filename);
     if(!file.open(QIODevice::WriteOnly | QFile::Text)){
        QMessageBox::warning(this, "Warning", "Unable to Save File");
