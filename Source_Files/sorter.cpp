@@ -15,6 +15,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QRegExp>
+#include <QRegularExpressionMatchIterator>
 #include <QStandardPaths>
 
 std::vector <Acronyms*> Sorter::Class_Known;
@@ -314,6 +315,7 @@ void Sorter::Load_List()
 
                       if (test_length > 1)
                       {
+
                           if(MultiCase(qtest_case, Unknown_txt))
                           {
                               ClassPhrase(arg);
@@ -723,13 +725,25 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
 
         // TAC(A)
        QStringList patterns {"\\s("+ QRegularExpression::escape(test_case) + ")\\s", "\\s(" + QRegularExpression::escape(test_case) + ")$",
-                             "^("+ QRegularExpression::escape(test_case) + ")\\s"  , "^("+ QRegularExpression::escape(test_case) + ")$"};
+                             "^("  + QRegularExpression::escape(test_case) + ")\\s"  , "^(" + QRegularExpression::escape(test_case) + ")$"};
         QString input_box_txt = ui->InputBox->toPlainText();
+        QRegularExpression nlrx("\\n");
+        QRegularExpressionMatchIterator newline = nlrx.globalMatch(input_box_txt);
+        bool patternFound = false;
 
+        int lines = 2;
+        while(newline.hasNext())
+        {
+            lines++;
+            newline.next();
+        }
+
+        for (auto l{0}; l != lines; l++)
+        {
         for (auto i{0}; i < patterns.length(); i++)
         {
             QRegularExpression rx(patterns[i]);
-            QRegularExpressionMatch match;
+              QRegularExpressionMatch match;
             QRegularExpressionMatch match2;
             match = rx.match(input_box_txt);
             match2 = rx.match(Unknown_txt);
@@ -747,17 +761,25 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
             }
 
             if(match.hasMatch())  //Need to build logic to check for repeated Acronyms.
+            {
+                if(match2.hasMatch())
                 {
                 if(match2.hasMatch()){
-                    int j = match2.capturedEnd();
+                    int j = match2.capturedStart();
                     int n = match2.capturedLength();
-                    j -= n;
+                    //j -= n;
                     Unknown_txt.replace(j,n," ");
-                    return true;
+                    patternFound = true;
+                }
+
+
                 }//if#2
                 }//if#1
+        }//for#2
         }//for#1
-        return false;
+
+
+return patternFound;
 }
 
 //        0.1.1 Regex logic for history sake Also look at how bad I am at this haha!!!!
@@ -818,7 +840,7 @@ bool Sorter::SingleCase(QString test_case, QString &input){
 //                return true;
 //            }
 
-    //SingleCase RegEx test works 1/1/209 @2000
+    //SingleCase RegEx test works 1/1/2019 @2000
 
     QRegExp PLSpace1   ("(\\s"     + test_case + ")(?=\\s)");   // Space with treiling space //tested
     QRegExp PLSpace2   ("(\\s\\d+"   + test_case + ")(?=\\s)");   // Space & Digit with trailing space //tested
@@ -838,6 +860,7 @@ bool Sorter::SingleCase(QString test_case, QString &input){
     if(input_qtxt.contains(PLSpace1))
     {
         input.replace(PLSpace1, " ");
+
         return true;
     }
 
