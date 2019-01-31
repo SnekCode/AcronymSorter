@@ -18,18 +18,20 @@
 #include <QRegularExpressionMatchIterator>
 #include <QStandardPaths>
 
-std::vector <Acronyms*> Sorter::Class_Known;
-std::vector <Acronyms*> Sorter::Class_Unk;
 std::vector <Acronyms*> Sorter::Class_all;
+std::vector <Acronyms*> Sorter::Class_Approved;
+std::vector <Acronyms*> Sorter::Class_DoD;
+std::vector <Acronyms*> Sorter::Class_User_Defined;
+QString Sorter::Class_list_approved_f0;
 QString Sorter::Class_list_all_f0;
-QString Sorter::Class_list_Known_f0;
-QString Sorter::Class_list_Unk_f0;
+QString Sorter::Class_list_user_defined_f0;
+QString Sorter::Class_list_approved_f1;
 QString Sorter::Class_list_all_f1;
-QString Sorter::Class_list_Known_f1;
-QString Sorter::Class_list_Unk_f1;
+QString Sorter::Class_list_user_defined_f1;
 size_t Sorter::iteration;
 int Sorter::SortModeBoxIndex;
 int Sorter::OutputFormatBoxIndex;
+
 
 Sorter::Sorter(QWidget *parent) :
     QMainWindow(parent),
@@ -84,8 +86,8 @@ void Sorter::Load_Config()
 
 
     }//while
-       ui->OutputFormatBox->setCurrentIndex(OutputFormatBoxIndex);
-       ui->SortModeBox->setCurrentIndex(SortModeBoxIndex);
+       //ui->OutputFormatBox->setCurrentIndex(OutputFormatBoxIndex);
+       //ui->SortModeBox->setCurrentIndex(SortModeBoxIndex);
        filesave = filesaveload;
        if(filesave){
        DataBaseFile = Filehistory;
@@ -225,26 +227,36 @@ void Sorter::Logic_Diagnostic()
 }
 
 
-void Sorter::Load_List()
-{
-    Class_list_Unk_f0.clear();
+void Sorter::Load_List(){
     Class_list_all_f0.clear();
-    Class_list_Known_f0.clear();
-    Class_list_Unk_f1.clear();
     Class_list_all_f1.clear();
-    Class_list_Known_f1.clear();
+    Class_list_approved_f0.clear();
+    Class_list_approved_f1.clear();
+    Class_list_user_defined_f0.clear();
+    Class_list_user_defined_f1.clear();
     iteration = 0;
-    QString input_qtxt = ui->InputBox->toPlainText();
-        //these are used to store the findings of the REGEX functions
-        QString KnownList; //used to save printed Known Acronyms
-        int Known_count{0};
-        QString Unknown_txt = input_qtxt;
+    input_qtxt = ui->InputBox->toPlainText();
+    Unknown_txt = input_qtxt;
     if(input_qtxt.size() == 0)
         return;
     ui->OutputBox->clear();
 
+    //temp bool
 
-    QFile file(DataBaseFile);
+    QFile file((_15WG) ? _15WGList : DoDList);
+    file.close();
+
+
+    for(int i{0}; i == 2; i++)
+{
+        if(i == 1 && file.fileName() ==_15WGList)
+        {
+            file.close();
+            file.setFileName(DoDList);
+            _15WG = false;
+        }
+        else if (i == 1 && file.fileName() == DoDList)
+            file.setFileName(_15WGList);
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {   QMessageBox::warning(this, "Warning", "Data File Not Found");
@@ -266,22 +278,10 @@ void Sorter::Load_List()
         file.open(QIODevice::ReadOnly);
         QTextStream FileStream(&file);
         QStringList arg; // var used to store lines from the database file read
+        QString demen = "\t";
 
-
-        //Unknown is a copy of the input QString as Known ACronyms are found they are removed from this copy
-
-        QRegExp csv (".csv");
-        QRegExp txt (".txt");
-        QString demen = nullptr;
-        //dement logic  will want to expand to include more data types !! Big Project!!
-        if(DataBaseFile.contains(txt))
-        demen = "\t";
-
-        if(DataBaseFile.contains(csv))
-        demen = ",";
           while (!file.atEnd()) {
                QString line = file.readLine();
-                   int i = 0;
                for (QString item : line.split(demen))
                 {
                    if (item != "\r\n")
@@ -291,51 +291,61 @@ void Sorter::Load_List()
 
                     else if (item == "\r\n")
                    {
-
-                      std::string input_txt = input_qtxt.toStdString();
-                      QString qtest_case = arg[0];
-                      std::string test_case = qtest_case.toStdString();
-                      std::size_t found_pos = input_txt.find(test_case);
-                      std::size_t test_length = test_case.length();
-                       if (found_pos != input_txt.npos)
-//                   QRegExp test (qtest_case);
-  //                 if(input_qtxt.contains(test))
-                       {
-                       if (test_length == 1)
-                      {
-                           //restructure to always pass the single case acronym to the class builder if found in input box.  the use of a third int val or possible global bool will determine if single case actually exists.  See TODO.txt for sudo code.
-                          if(SingleCase(qtest_case, Unknown_txt))
-                          {
-                          ClassPhrase(arg);
-                          Known_count++;
-                          i = 0;
-                          arg.clear();
-                          }
-                       }
-
-                      if (test_length > 1)
-                      {
-
-                          if(MultiCase(qtest_case, Unknown_txt))
-                          {
-                              ClassPhrase(arg);
-                              Known_count++;
-                              i = 0;
-                              arg.clear();
-                          }
-                      }
-                      }//nested if for searching
-                       i = 0;
-                       arg.clear();
+                       Search_for(arg, file.fileName());
                    }//else
+                       //Function call to split up Load list function, called test case; pass arg varible;
+                    }//for
+                    arg.clear();
+                    }//while
+          file.close();
+}//for loop
+    Find_User_Defined();
+}//Load_List end;
 
-                 }//for
+void Sorter::Search_for(QStringList arg, QString filename)
+{
+//          bool is15Wg = true;
+//          if(filename == DoDList)
+//              is15Wg = false;
 
+          std::string input_txt = input_qtxt.toStdString();
+          QString qtest_case = arg[0];
+          std::string test_case = qtest_case.toStdString();
+          std::size_t found_pos = input_txt.find(test_case);
+          std::size_t test_length = test_case.length();
+           if (found_pos != input_txt.npos)
+           {
+           if (test_length == 1)
+        {
 
-       }//while
+              if(SingleCase(qtest_case, Unknown_txt))
+              {
+              ClassPhrase(arg);
+              //Known_count++;
+             // i = 0;
+             // arg.clear();
+              }
+           }
+
+          if (test_length > 1)
+          {
+
+              if(MultiCase(qtest_case, Unknown_txt))
+              {
+                  ClassPhrase(arg);
+                 // Known_count++;
+                //  i = 0;
+                //  arg.clear();
+              }
+          }
+       }//nested if for searching
+                    //   i = 0;
+                       arg.clear();
+                   }//Search_for end;
 
           //compare KnownList to Unknown List here
 
+void Sorter::Find_User_Defined(){
           if(debug)
             {
               qDebug() <<"String Before: " << Unknown_txt;
@@ -383,21 +393,25 @@ void Sorter::Load_List()
           UnknownLoop(CapList);
           }//scope
 
-          // create AlphaBet sorter
-          size_t total = (Class_Unk.size() + Class_Known.size());
+          //All Classes Alpha Bet Sorter
+          size_t total = (Class_User_Defined.size() + Class_Approved.size() + Class_DoD.size());
 
-          if(Class_Unk.size() != 0)
+          if(Class_User_Defined.size() != 0)
           {
-          for (size_t i = 0; i < Class_Unk.size(); i++)
+          for (size_t i = 0; i < Class_User_Defined.size(); i++)
           {
-              Class_all.push_back(Class_Unk[i]);
+              Class_all.push_back(Class_User_Defined[i]);
           }
           }
-          if(Class_Known.size() != 0)
+          if(Class_Approved.size() != 0)
           {
-          for (size_t i = 0; i < Class_Known.size(); i++)
+          for (size_t i = 0; i < Class_Approved.size(); i++)
           {
-              Class_all.push_back(Class_Known[i]);
+              Class_all.push_back(Class_Approved[i]);
+          }
+          for (size_t i = 0; i < Class_DoD.size(); i++)
+          {
+              Class_all.push_back(Class_DoD[i]);
           }
           }
           //Sort logic works 0.1.3_uI_update.0
@@ -416,7 +430,7 @@ void Sorter::Load_List()
           ui->InputBox->setFontFamily("Calibri");
           ui->InputBox->setFontPointSize(11);
 
-        //call to opne verifyAcro window allowing user to talior the results and to enter Definitions for the unknown acronyms
+        //call to open verifyAcro window allowing user to talior the results and to enter Definitions for the unknown acronyms
           QString test1 = "Nodef";
           QString test2 = "???";
 
@@ -447,11 +461,11 @@ void Sorter::Load_List()
                   QString format1 = def1 + " (" + name +"); ";
 
 
+                      Sorter::Class_list_approved_f0.push_back(format0);
                       Sorter::Class_list_all_f0.push_back(format0);
-                      Sorter::Class_list_Known_f0.push_back(format0);
 
+                      Sorter::Class_list_approved_f1.push_back(format1);
                       Sorter::Class_list_all_f1.push_back(format1);
-                      Sorter::Class_list_Known_f1.push_back(format1);
 
           }
                   iteration++;
@@ -459,26 +473,36 @@ void Sorter::Load_List()
 
 
           //memory management deleting all saved Acronyms
-          ClearClassVector(Class_Known);
-          ClearClassVector(Class_Unk);
+          ClearClassVector(Class_Approved);
+          ClearClassVector(Class_User_Defined);
+          ClearClassVector(Class_DoD);
           Class_all.clear();
+          //final semicolon removal
+          Class_list_user_defined_f0.remove(Class_list_user_defined_f0.length(),1);
+
+
+
           if(OutputFormatBoxIndex == 0){
               if(Sorter::SortModeBoxIndex == 0)
-                  ui->OutputBox->setPlainText(Class_list_all_f0);
+                  ui->OutputBox->setPlainText(Class_list_approved_f0);
               if(Sorter::SortModeBoxIndex == 1)
-                  ui->OutputBox->setPlainText(Class_list_Known_f0);
+                  ui->OutputBox->setPlainText(Class_list_all_f0);
               if(Sorter::SortModeBoxIndex == 2)
-                  ui->OutputBox->setPlainText(Class_list_Unk_f0);
+                  ui->OutputBox->setPlainText(Class_list_user_defined_f0);
             }
           if(OutputFormatBoxIndex == 1){
               if(Sorter::SortModeBoxIndex == 0)
                   ui->OutputBox->setPlainText(Class_list_all_f1);
               if(Sorter::SortModeBoxIndex == 1)
-                  ui->OutputBox->setPlainText(Class_list_Known_f1);
+                  ui->OutputBox->setPlainText(Class_list_approved_f1);
               if(Sorter::SortModeBoxIndex == 2)
-                  ui->OutputBox->setPlainText(Class_list_Unk_f1);
+                  ui->OutputBox->setPlainText(Class_list_user_defined_f1);
           }
 
+          if(repeatedAcronyms)
+          {
+
+          }
 
           //0.1.3 UI Update should obsolete this
        //sorter drop down logic
@@ -527,12 +551,10 @@ void Sorter::UnknownLoop (QStringList CapList)
 
 }
 
-
-
 void Sorter::UnkClassPhrase(QString arg)
 {
     Acronyms* acronym = new Acronyms(arg);
-    Class_Unk.push_back(acronym);
+    Class_User_Defined.push_back(acronym);
 
     return;
 }
@@ -542,7 +564,7 @@ void Sorter::ClassPhrase (QStringList &arg){
                    int def_num{0};
                    if(debug)
                            def_num=7;
-                   else
+                  else
                    {
                    if (arg[7] != "Nodef")
                        def_num = 7;
@@ -581,7 +603,13 @@ void Sorter::ClassPhrase (QStringList &arg){
                     //add global clas variable to 'save' class data for singlecase matches. this can be set based on a global bool set to true indicating singlecase match was found.
                    //if(singlematch)
                    //globalclass= *acronym.
-                  Class_Known.push_back(acronym);
+                  if(_15WG)
+                    {
+                        Class_Approved.push_back(acronym);
+                        return;
+                    }
+                  else
+                        Class_DoD.push_back(acronym);
 
 }
 
@@ -730,7 +758,7 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
         QRegularExpression nlrx("\\n");
         QRegularExpressionMatchIterator newline = nlrx.globalMatch(input_box_txt);
         bool patternFound = false;
-
+        int deleteCount = 0;
         int lines = 2;
         while(newline.hasNext())
         {
@@ -770,6 +798,7 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
                     //j -= n;
                     Unknown_txt.replace(j,n," ");
                     patternFound = true;
+                    deleteCount++;
                 }
 
 
@@ -778,7 +807,10 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
         }//for#2
         }//for#1
 
-
+if(deleteCount > 1)
+{
+    repeatedAcronyms = true;
+}
 return patternFound;
 }
 
@@ -913,19 +945,19 @@ void Sorter::on_OutputFormatBox_currentIndexChanged()
 
     if(OutputFormatBoxIndex == 0){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_all_f0);
+            ui->OutputBox->setPlainText(Class_list_approved_f0);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_Known_f0);
+            ui->OutputBox->setPlainText(Class_list_all_f0);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_Unk_f0);
+            ui->OutputBox->setPlainText(Class_list_user_defined_f0);
       }
     if(OutputFormatBoxIndex == 1){
         if(Sorter::SortModeBoxIndex == 0)
             ui->OutputBox->setPlainText(Class_list_all_f1);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_Known_f1);
+            ui->OutputBox->setPlainText(Class_list_approved_f1);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_Unk_f1);
+            ui->OutputBox->setPlainText(Class_list_user_defined_f1);
     }
 }
 
@@ -1025,19 +1057,19 @@ void Sorter::on_SortModeBox_currentIndexChanged()
 
     if(OutputFormatBoxIndex == 0){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_all_f0);
+            ui->OutputBox->setPlainText(Class_list_approved_f0);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_Known_f0);
+            ui->OutputBox->setPlainText(Class_list_all_f0);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_Unk_f0);
+            ui->OutputBox->setPlainText(Class_list_user_defined_f0);
       }
     if(OutputFormatBoxIndex == 1){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_all_f1);
+            ui->OutputBox->setPlainText(Class_list_approved_f1);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_Known_f1);
+            ui->OutputBox->setPlainText(Class_list_all_f1);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_Unk_f1);
+            ui->OutputBox->setPlainText(Class_list_user_defined_f1);
     }
 }
 

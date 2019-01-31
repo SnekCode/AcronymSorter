@@ -22,7 +22,9 @@ class Sorter : public QMainWindow
 
 private:
 //defaults
-QString defaultfile = ":/Data/Classes.txt";
+QString DoDList = ":/Data/Classes.txt";
+QString _15WGList = ":/Data/15WingClasses.txt";
+QString defaultfile = _15WGList;
 QString config = "config.dat";
 QString Diag_File = "Diag.csv";
 int defaultfontsize = 8;
@@ -30,6 +32,7 @@ int defaultfontsize = 8;
 //properties
 
 bool debug = false;
+bool _15WG = false;
 int windowWidth = 1500;
 int windowHeight = 400;
 int w_xpos = 0;
@@ -37,19 +40,29 @@ int w_ypos = 0;
 int fontsize = 8;
 
 public:
-
+//Class Varibles
+bool repeatedAcronyms = false; //set to true if repeated acronyms are found then notifies user.
 QString DataBaseFile = defaultfile;
 bool filesave = false;
 QString Filehistory;
-static std::vector <Acronyms*> Class_Unk;
-static std::vector <Acronyms*> Class_Known;
 static std::vector <Acronyms*> Class_all;
-static QString Class_list_Known_f0;
-static QString Class_list_Unk_f0;
+static std::vector <Acronyms*> Class_Approved;
+static std::vector <Acronyms*> Class_DoD;
+static std::vector <Acronyms*> Class_User_Defined;
+
+//For load List and Search_for functions, these will be given vaule from the functions
+QString input_qtxt = "";
+//Used to store the findings of the REGEX functions
+QString KnownList; //used to save printed Known Acronyms
+int Known_count{0};
+QString Unknown_txt = "";
+
 static QString Class_list_all_f0;
-static QString Class_list_Known_f1;
-static QString Class_list_Unk_f1;
+static QString Class_list_approved_f0;
+static QString Class_list_user_defined_f0;
 static QString Class_list_all_f1;
+static QString Class_list_approved_f1;
+static QString Class_list_user_defined_f1;
 static size_t iteration;
 static int OutputFormatBoxIndex;
 static int SortModeBoxIndex;
@@ -76,6 +89,8 @@ public:
 
 private slots:
     void Load_Config();
+    void Search_for(QStringList arg, QString file);
+    void Find_User_Defined();
     void ClearClassVector(std::vector <Acronyms*> & a);
     void on_OutputFormatBox_currentIndexChanged();
     void on_action_Open_triggered();

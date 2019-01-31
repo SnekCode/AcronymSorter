@@ -1,0 +1,147 @@
+A/R	Aerial Refueling	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AC	Aircraft Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ACC	Air Combat Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ACSC	Air Command And Staff College	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AD	Airdrop	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ADAPT	Alcohol & Drug Abuse Prevention & Treatment	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ADC	Area Defense Council	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ADO	Assistant Director Of Operations	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AE	Aero Medical Evacuation	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AETC	Air Education And Training Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AF	Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFB	Air Force Base	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFE	Aircrew Flight Equipment	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFI	Air Force Instruction	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFMC	Air Force Material Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFRC	Air Force Reserve Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFS021	Air Force Smart Ops 21	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AFSOC	Air Force Special Operations Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ALS	Airman Leadership School	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AMC	Air Mobility Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AMU	Aircraft Maintenance Unit	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ANG	Air National Guard	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AOC	Air Operations Center	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AOR	Area Of Responsibility	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ASAP	As Soon As Possible	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ASEV	Aircrew Stan/Eval Visit	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ATO	Air Tasking Order	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+AWC	Air War College	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+B	Billion	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+BTZ	Below The Zone	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+C2/C3	Command, Control, Communications	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CAF	Combat Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CAP	Combat Air Patrol	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CC	Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CCDR	Combatant Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CCMD	Combatant Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CDC	Career Development Course	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CDC	Child Development Center	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CENTCOM	USCENTCOM	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CGO	Company Grade Officer	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CGOC	Company Grade Officer Counsel	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CGOQ	CGO Of The Quarter	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CGOY	CGO Of The Year	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CJCS	Chairman Of The Joint Chiefs Of Staff	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CMSAF	CMSgt Of The Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CMSgt	Chief Master Sargent	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+COLA	Cost Of Living Allowance	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CONUS	Continental United States	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CPI	Continuous Process Improvement	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+CSAF	Chief Of Staff Of The Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DAADC	Deputy Area Air Defense Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DG	Distinguished Graduate	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DIRMOBFOR	Director Of Mobility Forces	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DM4	Director Of Mobility Forces	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DO	Duty Officer, Director Of Operations	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DoD	Department Of Defense	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DoS	Department Of State	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DPRK	Democratic Republic Of Korea	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DTS	Defense Travel System	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+DV	Distinguished Visitor	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+EMT	Emergency Medical Technician	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+EOD	Explosive Ordinance Disposal	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+EPR	Enlisted Performance Report	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ER	Emergency Room	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+FGO	Field Grade Officer	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+FTAC	First Term Airmen Center	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+FY	Fiscal Year	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+gp	Group	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Gp	Group	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Gp/CC	Group Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Gp/CD	Group Deputy	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+GPC	Government Purchase Card	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+GTC	Government Travel Card	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+HHq	Higher Headquarters	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+HI	Hawaii	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Hq	Headquarters	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+HSC	Home Station Check	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+IDE	Intermediate Development Education	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+IMR	Individual Medical Readiness	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+INDOPACOM	Indo-Paclfic Command	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+IP	Instructor Pilot	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ISR	Intelligence, Surveillance, Reconnaissance	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+JBPH-H	Joint Base Pearl Harbor-Hickam	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+JCS	Joint Chiefs Of Staff	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+lSO	In Support Of	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+M	Million	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+MAF	Mobility Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+MEDEVAC	Medical Evacuation	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Mx	Maintenance	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+NAF	Numbered Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+NCA	Nat Ional Command Authority	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+NCO	Non-Commissioned Officer	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+NCOA	Non-Commissioned Officer Academy	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OA	Quality Assurance	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OCO	Overseas Contingency Operations	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OEF	Op ENDURING FREEDOM	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OIF	Op IRAQI FREEDOM	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OIR	Op INHERENT RESOLVE	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OND	Op NEW DAWN	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ONE	Op NOBLE EAGLE	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OPLAN	Operation Plan	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OPR	Officer Performance Report	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OTM	Of The Month	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+OTY	Of The Year	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+PACAF	Pacific Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+PCM	Primary Care Manager	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+PDE	Primary Developmental Education	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+PHA	Preventive Health Assessment	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+POTUS	President	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+QoL	Quality Of Life	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+RA	Resource Advisor	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ROK	Republic Of Korea	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+ROTC	Reserve Officer Training Corps	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SABC	Self-Aid Buddy Care	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SAPR	Sexual Assault Prevention And Response	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SDE	Senior Developmental Education	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SECAF	Secretary Of The Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SecDef	Secretary Of Defense	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SECSTATE	Secretary Of State	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SF	Security Forces	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SME	Subject Matter Expert	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SNCO	Senior Non-Commissioned Officer	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SOF	Special Operations Forces	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+SOS	Squadron Officer School	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Sq	Squadron	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Sq/CC	Squadron Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Sq/CD	Squadron Deputy Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Sq/DO	Squadron Operations Officer	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+TDY	Temporary Duty	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+TFI	Total Force Integration	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+TRANSCOM	USTRANSCOM	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+UCMJ	Uniform Code Of Military Justice	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+UEI	Unit Effectiveness Inspection	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+USAF	United States Air Force	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+USCG	United States Coast Guard	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+USMC	United States Marine Corps	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+USN	United States Navy	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+USTC	USTRANSCOM	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+VIP	Very Important Person	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+VPOTUS	Vice President	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+wg	Wing	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Wg	Wing	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Wg/CC	Wing Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+Wg/CV	Wing Vice Commander	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+WIT	Wing Inspection Team	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+WRM	War Reserve Materiel	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
+WW	Worldwide	Nodef	Nodef	Nodef	Nodef	Nodef	Nodef	
