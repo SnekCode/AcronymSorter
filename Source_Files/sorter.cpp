@@ -15,19 +15,17 @@
 #include <QDir>
 #include <QDebug>
 #include <QRegExp>
+#include <QRegularExpression>
 #include <QRegularExpressionMatchIterator>
 #include <QStandardPaths>
 
 std::vector <Acronyms*> Sorter::Class_all;
-std::vector <Acronyms*> Sorter::Class_Approved;
-std::vector <Acronyms*> Sorter::Class_DoD;
-std::vector <Acronyms*> Sorter::Class_User_Defined;
-QString Sorter::Class_list_approved_f0;
-QString Sorter::Class_list_all_f0;
-QString Sorter::Class_list_user_defined_f0;
-QString Sorter::Class_list_approved_f1;
-QString Sorter::Class_list_all_f1;
-QString Sorter::Class_list_user_defined_f1;
+QString Sorter::list_approved_f1;
+QString Sorter::list_all_f1;
+QString Sorter::list_user_defined_f1;
+QString Sorter::list_approved_f2;
+QString Sorter::list_all_f2;
+QString Sorter::list_user_defined_f2;
 size_t Sorter::iteration;
 int Sorter::SortModeBoxIndex;
 int Sorter::OutputFormatBoxIndex;
@@ -228,35 +226,54 @@ void Sorter::Logic_Diagnostic()
 
 
 void Sorter::Load_List(){
-    Class_list_all_f0.clear();
-    Class_list_all_f1.clear();
-    Class_list_approved_f0.clear();
-    Class_list_approved_f1.clear();
-    Class_list_user_defined_f0.clear();
-    Class_list_user_defined_f1.clear();
+    list_all_f1.clear();
+    list_all_f2.clear();
+    list_approved_f1.clear();
+    list_approved_f2.clear();
+    list_user_defined_f1.clear();
+    list_user_defined_f2.clear();
     iteration = 0;
     input_qtxt = ui->InputBox->toPlainText();
     Unknown_txt = input_qtxt;
     if(input_qtxt.size() == 0)
         return;
-    ui->OutputBox->clear();
-
-    //temp bool
-
-    QFile file((_15WG) ? _15WGList : DoDList);
-    file.close();
 
 
-    for(int i{0}; i == 2; i++)
+
+
+    QFile file;
+
+
+
+    for(int i{0}; i <= 1; i++)
 {
-        if(i == 1 && file.fileName() ==_15WGList)
+        isDoDList = false;
+        is15WgList = false;
+        if(i == 0)
         {
-            file.close();
+            if(_15WG){
+                file.setFileName(_15WGList);
+                is15WgList = true;
+            }
+            else{
             file.setFileName(DoDList);
-            _15WG = false;
+                isDoDList = true;
+            }
+
         }
-        else if (i == 1 && file.fileName() == DoDList)
-            file.setFileName(_15WGList);
+        if(i == 1)
+        {
+            if(file.fileName() == _15WGList){
+                file.setFileName(DoDList);
+                isDoDList = true;
+            }
+            else {
+                file.setFileName(_15WGList);
+                is15WgList = true;
+            }
+        }
+
+
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {   QMessageBox::warning(this, "Warning", "Data File Not Found");
@@ -291,77 +308,66 @@ void Sorter::Load_List(){
 
                     else if (item == "\r\n")
                    {
-                       Search_for(arg, file.fileName());
+                       Search_for(arg);
                    }//else
                        //Function call to split up Load list function, called test case; pass arg varible;
                     }//for
                     arg.clear();
                     }//while
+                        isEndofList = true;
+                        for (auto a : savedArg)
+                        {
+                            Search_for(a);
+                        }
+                        savedArg.clear();
+                        isEndofList = false;
           file.close();
 }//for loop
     Find_User_Defined();
 }//Load_List end;
 
-void Sorter::Search_for(QStringList arg, QString filename)
+void Sorter::Search_for(QStringList arg)
 {
-//          bool is15Wg = true;
-//          if(filename == DoDList)
-//              is15Wg = false;
 
-          std::string input_txt = input_qtxt.toStdString();
-          QString qtest_case = arg[0];
-          std::string test_case = qtest_case.toStdString();
-          std::size_t found_pos = input_txt.find(test_case);
-          std::size_t test_length = test_case.length();
-           if (found_pos != input_txt.npos)
+    std::string input_txt = input_qtxt.toStdString();
+    QString qtest_case = arg[0];
+    std::string test_case = qtest_case.toStdString();
+    std::size_t found_pos = input_txt.find(test_case);
+    if(test_case.length() == 1 && !isEndofList)
+    {
+        savedArg.push_back(arg);
+        arg.clear();
+        return;
+    }
+
+    if (found_pos != input_txt.npos)
            {
-           if (test_length == 1)
-        {
-
-              if(SingleCase(qtest_case, Unknown_txt))
-              {
-              ClassPhrase(arg);
-              //Known_count++;
-             // i = 0;
-             // arg.clear();
-              }
-           }
-
-          if (test_length > 1)
-          {
-
-              if(MultiCase(qtest_case, Unknown_txt))
+              if(RegEx_Search(qtest_case, Unknown_txt))
               {
                   ClassPhrase(arg);
                  // Known_count++;
                 //  i = 0;
                 //  arg.clear();
               }
+              arg.clear();
           }
-       }//nested if for searching
-                    //   i = 0;
-                       arg.clear();
-                   }//Search_for end;
+       }//search for end
 
-          //compare KnownList to Unknown List here
 
 void Sorter::Find_User_Defined(){
+
+
           if(debug)
             {
               qDebug() <<"String Before: " << Unknown_txt;
               qDebug() << "String After: " << input_qtxt;
             }
 
-          //Unknown Class Build
           QString UnknownList;
           QStringList CapList;
-          std::string Unk_Str_count;
-          std::string Known_Str_count;
           QRegExp CAPS  ("[A-Z]{2,}(?=\\W)");
           QRegExp CAPS2 ("[A-Z]{2,}(?=$)");
 
-
-//R2D2 R2  REGEX Search
 
           QStringList patterns {"[A-Z]{2,}(?=\\W)","[A-Z]{2,}(?=$)",
                                 "(^|\\s[A-Z](?=\\s|$)", "([A-Z]+[^a-z\\s])+(?=\\s|$)"};
@@ -372,8 +378,6 @@ void Sorter::Find_User_Defined(){
 
 
           {//for some scope
-          int unk_count=0;
-
           for (auto i{0}; i < patterns.length(); i++)
           {
               QRegularExpression rx(patterns[i]);
@@ -384,37 +388,14 @@ void Sorter::Find_User_Defined(){
                       CapList.push_back(match.captured());
                       Unknown_txt.remove(match.captured());
                       match = rx.match(Unknown_txt);
-                      unk_count++;
                   }
                   //Unknown_txt.replace(CAPS, " ");
               }//for
-          Unk_Str_count = std::to_string(unk_count);
-          Known_Str_count = std::to_string(Known_count);
+
           UnknownLoop(CapList);
           }//scope
 
-          //All Classes Alpha Bet Sorter
-          size_t total = (Class_User_Defined.size() + Class_Approved.size() + Class_DoD.size());
-
-          if(Class_User_Defined.size() != 0)
-          {
-          for (size_t i = 0; i < Class_User_Defined.size(); i++)
-          {
-              Class_all.push_back(Class_User_Defined[i]);
-          }
-          }
-          if(Class_Approved.size() != 0)
-          {
-          for (size_t i = 0; i < Class_Approved.size(); i++)
-          {
-              Class_all.push_back(Class_Approved[i]);
-          }
-          for (size_t i = 0; i < Class_DoD.size(); i++)
-          {
-              Class_all.push_back(Class_DoD[i]);
-          }
-          }
-          //Sort logic works 0.1.3_uI_update.0
+          //Sorts the Class_all into alphabetical order
           std::sort(Class_all.begin(),
                     Class_all.end(),
                     [](const Acronyms* lhs, const Acronyms* rhs)
@@ -430,74 +411,74 @@ void Sorter::Find_User_Defined(){
           ui->InputBox->setFontFamily("Calibri");
           ui->InputBox->setFontPointSize(11);
 
-        //call to open verifyAcro window allowing user to talior the results and to enter Definitions for the unknown acronyms
-          QString test1 = "Nodef";
-          QString test2 = "???";
-
-          while (iteration < total)
-          {
-          if (*Class_all[iteration]->def1 == test2)
-          {
-          VerifyAcro verify;
-          verify.setModal(true);
-          verify.exec();
-          iteration ++;
-          continue;
-          }
-          else if (*Class_all[iteration]->def2 != test1)
-              {
-              VerifyAcro verify;
-              verify.setModal(true);
-              verify.exec();
-              iteration ++;
-              continue;
-              }
-              else {
-
-                  Class_all[iteration]->set_num(1);
-                  QString name  = *Class_all[iteration]->name;
-                  QString def1 = *Class_all[iteration]->def1;
-                  QString format0 = name + " (" + def1 +"); ";
-                  QString format1 = def1 + " (" + name +"); ";
+        //call to open verifyAcro window allowing user to talior the results and to enter Definitions for the unknown
+          _15WG = ui->_15WGRule->isChecked();
+          AcroVerification(Class_all);
 
 
-                      Sorter::Class_list_approved_f0.push_back(format0);
-                      Sorter::Class_list_all_f0.push_back(format0);
+          for (size_t i {0}; i < Class_all.size(); i++){
 
-                      Sorter::Class_list_approved_f1.push_back(format1);
-                      Sorter::Class_list_all_f1.push_back(format1);
+                 list_all_f1.push_back(Class_all[i]->format1);
+                 list_all_f2.push_back(Class_all[i]->format2);
+                 totalCount++;
 
-          }
-                  iteration++;
-              }
+             if(!_15WG && Class_all[i]->sourceList == DoDList){
+                 list_approved_f1.push_back(Class_all[i]->format1);
+                 list_approved_f2.push_back(Class_all[i]->format2);
+                 approvedCount++;
+            }
+             if(_15WG && Class_all[i]->sourceList == DoDList){
+                 list_user_defined_f1.push_back(Class_all[i]->format1);
+                 list_user_defined_f2.push_back(Class_all[i]->format2);
+                 userDefinedCount++;
+            }
+             if(Class_all[i]->sourceList == "user"){
+                 list_user_defined_f1.push_back(Class_all[i]->format1);
+                 list_user_defined_f2.push_back(Class_all[i]->format2);
+                 userDefinedCount++;
+             }
 
 
-          //memory management deleting all saved Acronyms
-          ClearClassVector(Class_Approved);
-          ClearClassVector(Class_User_Defined);
-          ClearClassVector(Class_DoD);
-          Class_all.clear();
+             if(Class_all[i]->sourceList == _15WGList && _15WG){
+                 list_approved_f1.push_back(Class_all[i]->format1);
+                 list_approved_f2.push_back(Class_all[i]->format2);
+                 approvedCount++;
+            }
+            }
+
+          ClearClassVector(Class_all);
+
           //final semicolon removal
-          Class_list_user_defined_f0.remove(Class_list_user_defined_f0.length(),1);
+          list_user_defined_f1.remove((list_user_defined_f1.length()-2),1);
+          list_all_f1.remove((list_all_f1.length()-2),1);
+          list_approved_f1.remove((list_approved_f1.length()-2),1);
+          list_user_defined_f2.remove((list_user_defined_f2.length()-2),1);
+          list_all_f2.remove((list_all_f2.length()-2),1);
+          list_approved_f2.remove((list_approved_f2.length()-2),1);
 
-
-
+          Sorter::SortModeBoxIndex = ui->SortModeBox->currentIndex();
+          ui->OutputBox->clear();
           if(OutputFormatBoxIndex == 0){
               if(Sorter::SortModeBoxIndex == 0)
-                  ui->OutputBox->setPlainText(Class_list_approved_f0);
+                  ui->OutputBox->setPlainText(list_user_defined_f1);
               if(Sorter::SortModeBoxIndex == 1)
-                  ui->OutputBox->setPlainText(Class_list_all_f0);
+                  ui->OutputBox->setPlainText(list_approved_f1);
               if(Sorter::SortModeBoxIndex == 2)
-                  ui->OutputBox->setPlainText(Class_list_user_defined_f0);
+                  ui->OutputBox->setPlainText(list_all_f1);
             }
           if(OutputFormatBoxIndex == 1){
               if(Sorter::SortModeBoxIndex == 0)
-                  ui->OutputBox->setPlainText(Class_list_all_f1);
+                  ui->OutputBox->setPlainText(list_user_defined_f2);
               if(Sorter::SortModeBoxIndex == 1)
-                  ui->OutputBox->setPlainText(Class_list_approved_f1);
+                  ui->OutputBox->setPlainText(list_approved_f2);
               if(Sorter::SortModeBoxIndex == 2)
-                  ui->OutputBox->setPlainText(Class_list_user_defined_f1);
+                  ui->OutputBox->setPlainText(list_all_f2);
           }
+
+          //Controls Notification label;
+          //QString countTotal = &"Total: " +  totalCount + " ";
+
+
 
           if(repeatedAcronyms)
           {
@@ -527,13 +508,54 @@ void Sorter::Find_User_Defined(){
           return;
    }
 
-void Sorter::ClearClassVector(std::vector <Acronyms*> &a)
+void Sorter::AcroVerification(std::vector <Acronyms*> arg)
 {
-    for (size_t i = 0; i < a.size(); i++)
-    delete a[i];
+    size_t total = (arg.size());
+    iteration = 0;
+    QString test1 = "Nodef";
+    QString test2 = "???";
 
+    while (iteration < total)
+    {
+    if (*arg[iteration]->def1 == test2)
+    {
+    VerifyAcro verify;
+    verify.setModal(true);
+    verify.exec();
+    }
+    else if (*arg[iteration]->def2 != test1)
+        {
+        VerifyAcro verify;
+        verify.setModal(true);
+        verify.exec();
+        }
+        else {
+        arg[iteration]->set_def(*arg[iteration]->def1);
+    }
+
+            arg[iteration]->set_num(1);
+            QString name  = *arg[iteration]->name;
+            QString def = arg[iteration]->SelectedDef;
+            QString format1 = name + " (" + def +"); ";
+            QString format2 = def + " (" + name +"); ";
+
+            arg[iteration]->set_f1(format1);
+            arg[iteration]->set_f2(format2);
+
+            iteration++;
+        }
+
+}
+
+
+void Sorter::ClearClassVector(std::vector<Acronyms *> &a)
+{
+   // qDebug() << "clear";
+    for(size_t i = 0; i < a.size(); i++)
+    {
+    a[i]->~Acronyms();
+    }
     a.clear();
-
 }
 
 void Sorter::UnknownLoop (QStringList CapList)
@@ -554,7 +576,7 @@ void Sorter::UnknownLoop (QStringList CapList)
 void Sorter::UnkClassPhrase(QString arg)
 {
     Acronyms* acronym = new Acronyms(arg);
-    Class_User_Defined.push_back(acronym);
+    Class_all.push_back(acronym);
 
     return;
 }
@@ -562,6 +584,7 @@ void Sorter::UnkClassPhrase(QString arg)
 void Sorter::ClassPhrase (QStringList &arg){
 
                    int def_num{0};
+
                    if(debug)
                            def_num=7;
                   else
@@ -603,14 +626,18 @@ void Sorter::ClassPhrase (QStringList &arg){
                     //add global clas variable to 'save' class data for singlecase matches. this can be set based on a global bool set to true indicating singlecase match was found.
                    //if(singlematch)
                    //globalclass= *acronym.
-                  if(_15WG)
-                    {
-                        Class_Approved.push_back(acronym);
-                        return;
-                    }
-                  else
-                        Class_DoD.push_back(acronym);
 
+                   if(isDoDList)
+                   {
+                   acronym->set_sourceList(DoDList);
+                   Class_all.push_back(acronym);
+                   }
+                   if(is15WgList)
+                   {
+                   acronym->set_sourceList(_15WGList);
+                   Class_all.push_back(acronym);
+                   }
+                   return;
 }
 
 QString Sorter::print(class Acronyms a)
@@ -740,7 +767,7 @@ QString Sorter::print(class Acronyms a)
     return "error";
 }
 
-bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
+bool Sorter::RegEx_Search(QString test_case, QString &Unknown_txt)
 {
        // Multicase REGEX test works 1/1/2019 @ 1730
 
@@ -752,14 +779,38 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
 //        QRegExp PLEndline3 ("(^\\d*" + test_case + ")(?=$)");   // Caret with trailing endline//tested
 
         // TAC(A)
-       QStringList patterns {"\\s("+ QRegularExpression::escape(test_case) + ")\\s", "\\s(" + QRegularExpression::escape(test_case) + ")$",
-                             "^("  + QRegularExpression::escape(test_case) + ")\\s"  , "^(" + QRegularExpression::escape(test_case) + ")$"};
+        QStringList patterns;
+        if(test_case.length() > 1) //multi letter test case
+        {
+             QStringList multi {  "\\s("+  QRegularExpression::escape(test_case) + ")\\s",
+                                    "\\s(" + QRegularExpression::escape(test_case) + ")$",
+                                    "^("  +  QRegularExpression::escape(test_case) + ")\\s"  ,
+                                    "^(" +   QRegularExpression::escape(test_case) + ")$"};
+             for(auto a : multi)
+                 patterns.push_back(a);
+        }
+
+        //  A&P AAA A AAA AA AAAA AAAAAA A AC AA AA AC AAAA CA ACAC ACA CACA 2A 3A
+        else{ //single letter test case
+
+            QStringList single {"(\\s)" + QRegularExpression::escape(test_case) + "(\\s|$)",
+                                "(\\d)" + QRegularExpression::escape(test_case) + "(\\d|$)",
+                                "(^)" + QRegularExpression::escape(test_case) + "(\\s|$)",
+                                "(^)" + QRegularExpression::escape(test_case) + "(\\d|$)"};
+             //(\d+A)(?=\s) finds 2A
+             //(\d+A)(?=$) finds with endline 2A
+             //(\s|\d)A(\s|\d)
+
+             for(auto a : single)
+                 patterns.push_back(a);
+        }
+
         QString input_box_txt = ui->InputBox->toPlainText();
         QRegularExpression nlrx("\\n");
         QRegularExpressionMatchIterator newline = nlrx.globalMatch(input_box_txt);
         bool patternFound = false;
         int deleteCount = 0;
-        int lines = 2;
+        int lines = 1;
         while(newline.hasNext())
         {
             lines++;
@@ -771,7 +822,7 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
         for (auto i{0}; i < patterns.length(); i++)
         {
             QRegularExpression rx(patterns[i]);
-              QRegularExpressionMatch match;
+            QRegularExpressionMatch match;
             QRegularExpressionMatch match2;
             match = rx.match(input_box_txt);
             match2 = rx.match(Unknown_txt);
@@ -798,7 +849,8 @@ bool Sorter::MultiCase(QString test_case, QString &Unknown_txt)
                     //j -= n;
                     Unknown_txt.replace(j,n," ");
                     patternFound = true;
-                    deleteCount++;
+                    deleteCount++;//if this number is more than 1 repeated acro bool is true;
+                    i--;
                 }
 
 
@@ -850,37 +902,22 @@ return patternFound;
 //            return true;
 //        }
 
-
+//singlecase Archived 01 Feb 2019
+/*
 bool Sorter::SingleCase(QString test_case, QString &input){
 
     QString input_qtxt = ui->InputBox->toPlainText();
     std::string input_txt = input_qtxt.toStdString();
-    //QString Symbols = "!@#$%^&*()_+-=:\";'<>?,./{}[]\\|~`";
-
-    //A&P TEST P
-//    QStringList patterns {"\\s(" + test_case + ")(?:\\s)",
-//                          "\\d+(" + test_case + ")"};
-
-//    for (auto i{0}; i < patterns.length(); i++)
-//    {
-//        QRegularExpression rx(patterns[i]);
-//        QRegularExpressionMatch match;
-//        match = rx.match(input_qtxt);
-//        if(match.hasMatch())
-//            {
-//                input.remove(match.captured());
-//                return true;
-//            }
 
     //SingleCase RegEx test works 1/1/2019 @2000
 
-    QRegExp PLSpace1   ("(\\s"     + test_case + ")(?=\\s)");   // Space with treiling space //tested
-    QRegExp PLSpace2   ("(\\s\\d+"   + test_case + ")(?=\\s)");   // Space & Digit with trailing space //tested
-    QRegExp PLSpace3   ("(^\\d+"   + test_case + ")(?=\\s)");   // Caret & Digit with trailing space //tested
-    QRegExp PLEndline1 ("(\\s"     + test_case + ")(?=$)");     // Space with trailing endline //tested
-    QRegExp PLEndline2 ("(\\s\\$?\\d+" + test_case + ")(?=$)");     // Space & Digit with trailing endline //tested
-    QRegExp PLEndline3 ("(^" + test_case + ")(?=\\s)");
-    QRegExp PLEndline4 ("(^" + test_case + ")($)");
+//    QRegExp PLSpace1   ("(\\s"     + test_case + ")(?=\\s)");   // Space with treiling space //tested
+//    QRegExp PLSpace2   ("(\\s\\d+"   + test_case + ")(?=\\s)");   // Space & Digit with trailing space //tested
+//    QRegExp PLSpace3   ("(^\\d+"   + test_case + ")(?=\\s)");   // Caret & Digit with trailing space //tested
+//    QRegExp PLEndline1 ("(\\s"     + test_case + ")(?=$)");     // Space with trailing endline //tested
+//    QRegExp PLEndline2 ("(\\s\\$?\\d+" + test_case + ")(?=$)");     // Space & Digit with trailing endline //tested
+//    QRegExp PLEndline3 ("(^" + test_case + ")(?=\\s)");
+//    QRegExp PLEndline4 ("(^" + test_case + ")($)");
 
 
     //need to a logic that if a singlecase match is made the class will be saved a global boolean set to true and the processing of the acronym section is continued.
@@ -889,49 +926,48 @@ bool Sorter::SingleCase(QString test_case, QString &input){
 
 
 
-    if(input_qtxt.contains(PLSpace1))
-    {
-        input.replace(PLSpace1, " ");
+//    if(input_qtxt.contains(PLSpace1))
+//    {
+//        input.replace(PLSpace1, " ");
 
-        return true;
-    }
+//        return true;
+//    }
 
-    if (input_qtxt.contains(PLSpace2))
-    {
-        input.replace(PLSpace2, " ");
-        return true;
-    }
+//    if (input_qtxt.contains(PLSpace2))
+//    {
+//        input.replace(PLSpace2, " ");
+//        return true;
+//    }
 
-    if (input_qtxt.contains(PLSpace3))
-    {
-        input.replace(PLSpace3, " ");
-        return true;
-    }
+//    if (input_qtxt.contains(PLSpace3))
+//    {
+//        input.replace(PLSpace3, " ");
+//        return true;
+//    }
 
-    if (input_qtxt.contains(PLEndline1))
-    {
-        input.replace(PLEndline1, " ");
-        return true;
-    }
+//    if (input_qtxt.contains(PLEndline1))
+//    {
+//        input.replace(PLEndline1, " ");
+//        return true;
+//    }
 
-    if (input_qtxt.contains(PLEndline2))
-    {
-        input.replace(PLEndline2, " ");
-        return true;
-    }
-    if (input_qtxt.contains(PLEndline3))
-    {
-        input.replace(PLEndline3, " ");
-        return true;
-    }
-    if (input_qtxt.contains(PLEndline4))
-    {
-        input.replace(PLEndline4, " ");
-        return true;
-    }
+//    if (input_qtxt.contains(PLEndline2))
+//    {
+//        input.replace(PLEndline2, " ");
+//        return true;
+//    }
+//    if (input_qtxt.contains(PLEndline3))
+//    {
+//        input.replace(PLEndline3, " ");
+//        return true;
+//    }
+//    if (input_qtxt.contains(PLEndline4))
+//    {
+//        input.replace(PLEndline4, " ");
+//        return true;
+//    }
 
-    return false;
-}
+*/
 
 void Sorter::on_SortBtn_clicked()
 {
@@ -945,19 +981,19 @@ void Sorter::on_OutputFormatBox_currentIndexChanged()
 
     if(OutputFormatBoxIndex == 0){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_approved_f0);
+            ui->OutputBox->setPlainText(list_user_defined_f1);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_all_f0);
+            ui->OutputBox->setPlainText(list_approved_f1);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_user_defined_f0);
+            ui->OutputBox->setPlainText(list_all_f1);
       }
     if(OutputFormatBoxIndex == 1){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_all_f1);
+            ui->OutputBox->setPlainText(list_user_defined_f2);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_approved_f1);
+            ui->OutputBox->setPlainText(list_approved_f2);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_user_defined_f1);
+            ui->OutputBox->setPlainText(list_all_f2);
     }
 }
 
@@ -1057,19 +1093,19 @@ void Sorter::on_SortModeBox_currentIndexChanged()
 
     if(OutputFormatBoxIndex == 0){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_approved_f0);
+            ui->OutputBox->setPlainText(list_user_defined_f1);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_all_f0);
+            ui->OutputBox->setPlainText(list_approved_f1);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_user_defined_f0);
+            ui->OutputBox->setPlainText(list_all_f1);
       }
     if(OutputFormatBoxIndex == 1){
         if(Sorter::SortModeBoxIndex == 0)
-            ui->OutputBox->setPlainText(Class_list_approved_f1);
+            ui->OutputBox->setPlainText(list_user_defined_f2);
         if(Sorter::SortModeBoxIndex == 1)
-            ui->OutputBox->setPlainText(Class_list_all_f1);
+            ui->OutputBox->setPlainText(list_approved_f2);
         if(Sorter::SortModeBoxIndex == 2)
-            ui->OutputBox->setPlainText(Class_list_user_defined_f1);
+            ui->OutputBox->setPlainText(list_all_f2);
     }
 }
 
@@ -1128,3 +1164,11 @@ void Sorter::on_InputBox_textChanged()
     //ui->InputBox->setPlainText(txt);
 }
 
+void Sorter::on__15WGRule_toggled(bool checked)
+{
+    if(checked)
+    _15WG = true;
+    else
+    _15WG = false;
+
+}

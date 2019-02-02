@@ -32,7 +32,9 @@ int defaultfontsize = 8;
 //properties
 
 bool debug = false;
-bool _15WG = false;
+bool _15WG = true;
+bool isDoDList;
+bool is15WgList;
 int windowWidth = 1500;
 int windowHeight = 400;
 int w_xpos = 0;
@@ -46,26 +48,28 @@ QString DataBaseFile = defaultfile;
 bool filesave = false;
 QString Filehistory;
 static std::vector <Acronyms*> Class_all;
-static std::vector <Acronyms*> Class_Approved;
-static std::vector <Acronyms*> Class_DoD;
-static std::vector <Acronyms*> Class_User_Defined;
+// used to save the single charecter test cases
+bool isEndofList;
+std::vector <QStringList> savedArg;
 
 //For load List and Search_for functions, these will be given vaule from the functions
 QString input_qtxt = "";
 //Used to store the findings of the REGEX functions
 QString KnownList; //used to save printed Known Acronyms
-int Known_count{0};
+int totalCount{0};
+int userDefinedCount{0};
+int approvedCount{0};
 QString Unknown_txt = "";
 
-static QString Class_list_all_f0;
-static QString Class_list_approved_f0;
-static QString Class_list_user_defined_f0;
-static QString Class_list_all_f1;
-static QString Class_list_approved_f1;
-static QString Class_list_user_defined_f1;
-static size_t iteration;
+static QString list_all_f1;
+static QString list_approved_f1;
+static QString list_user_defined_f1;
+static QString list_all_f2;
+static QString list_approved_f2;
+static QString list_user_defined_f2;
 static int OutputFormatBoxIndex;
 static int SortModeBoxIndex;
+static size_t iteration;
 
     explicit Sorter(QWidget *parent = nullptr);
     ~Sorter();
@@ -77,9 +81,9 @@ public slots:
     void ClassPhrase(QStringList &arg);
     void UnknownLoop (QStringList CapList);
     QString print (class Acronyms a);
-    bool SingleCase(QString arg, QString &input);
-    bool MultiCase(QString arg, QString &input);
+    bool RegEx_Search(QString arg, QString &input);
     void Save_Config();
+    void AcroVerification(std::vector<Acronyms*> arg);
 
 
 public:
@@ -89,9 +93,9 @@ public:
 
 private slots:
     void Load_Config();
-    void Search_for(QStringList arg, QString file);
+    void Search_for(QStringList arg);
     void Find_User_Defined();
-    void ClearClassVector(std::vector <Acronyms*> & a);
+    void ClearClassVector(std::vector<Acronyms *> &a);
     void on_OutputFormatBox_currentIndexChanged();
     void on_action_Open_triggered();
     void on_actionExport_triggered();
@@ -109,9 +113,15 @@ private slots:
     void on_actionRun_Logic_Diagnostic_triggered();
     void Logic_Diagnostic();
     void on_InputBox_textChanged();
+    void on__15WGRule_toggled(bool checked);
+
 
     friend class Acronyms;
     friend class VerifyAcro;
 
 };
 
+      /////////////////////////////////////////////
+     ///////////////////ARCHIVE//////////////////
+    ///////////////////////////////////////////
+    //bool SingleCase(QString arg, QString &input);

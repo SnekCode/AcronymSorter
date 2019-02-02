@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <cstring>
+#include <QtDebug>
 
 
 //constructor
@@ -53,6 +54,8 @@ Acronyms::Acronyms(QString n)
     *def7 = "Nodef";
     def_num = new int;
     *def_num = 1;
+    sourceList = *new QString;
+    sourceList = "user";
     //std::cout << "Constructed " << *name;
 };
 
@@ -99,17 +102,38 @@ Acronyms::Acronyms(const Acronyms &source)
 
 Acronyms::~Acronyms()
 {
-    //std::cout << "deleted " << name;
-
+    qDebug() <<"Deleted" << this;
 }
 
 void Acronyms::set_num (int a)
 {
     sort_num = &a;
 }
+
+void Acronyms::set_sourceList(QString l)
+{
+    sourceList = l;
+}
+
+void Acronyms::set_def(QString d)
+{
+    SelectedDef = d;
+}
+
+
+void Acronyms::set_f1(QString f)
+{
+    format1 = f;
+}
+void Acronyms::set_f2(QString f)
+{
+    format2 = f;
+}
+
 QString Acronyms::get_name()
 {
     return *name;
 }
+
 
 

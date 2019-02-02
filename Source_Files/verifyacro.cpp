@@ -11,15 +11,14 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
 {
 
     ui->setupUi(this);
-     QString name =*Sorter::Class_all[Sorter::iteration]->name;
-     QString def1 = *Sorter::Class_all[Sorter::iteration]->def1;
-
-     QString def2 = *Sorter::Class_all[Sorter::iteration]->def2;
-     QString def3 = *Sorter::Class_all[Sorter::iteration]->def3;
-     QString def4 = *Sorter::Class_all[Sorter::iteration]->def4;
-     QString def5 = *Sorter::Class_all[Sorter::iteration]->def5;
-     QString def6 = *Sorter::Class_all[Sorter::iteration]->def6;
-     QString def7 = *Sorter::Class_all[Sorter::iteration]->def7;
+    QString name = *Sorter::Class_all[Sorter::iteration]->name;
+    QString def1 = *Sorter::Class_all[Sorter::iteration]->def1;
+    QString def2 = *Sorter::Class_all[Sorter::iteration]->def2;
+    QString def3 = *Sorter::Class_all[Sorter::iteration]->def3;
+    QString def4 = *Sorter::Class_all[Sorter::iteration]->def4;
+    QString def5 = *Sorter::Class_all[Sorter::iteration]->def5;
+    QString def6 = *Sorter::Class_all[Sorter::iteration]->def6;
+    QString def7 = *Sorter::Class_all[Sorter::iteration]->def7;
 
      ui->AcroEdit->hide();
 
@@ -29,7 +28,7 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
 
     if (def7 != "Nodef")
     {
-         Sorter::Class_all[Sorter::iteration]->set_num(1);
+        Sorter::Class_all[Sorter::iteration]->set_num(1);
         ui->AcroDef->addItem(def7);
         ui->AcroDef->addItem(def6);
         ui->AcroDef->addItem(def5);
@@ -80,18 +79,13 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
         ui->AcroDef->addItem(def2);
         ui->AcroDef->addItem(def1);
     }
-    else
+    else if (def1 == "???")
     {
-        if(def1 == "???")
-        {
             Sorter::Class_all[Sorter::iteration]->set_num(2);
             ui->AcroDef->hide();
             ui->AcroEdit->show();
 
-        }
-
-
-    }//else
+     }
 
     return;
 }
@@ -108,34 +102,43 @@ void VerifyAcro::on_pushButton_clicked()
 
 void VerifyAcro::on_buttonBox_accepted()
 {
-    if(ui->AcroDef->isVisible())
+    if(ui->AcroDef->isVisible()) //this section controls which list is placed where use bool_15wg to control the dod list flow!!!!!!!!!!!!!
     {
-    QString def1 = ui->AcroDef->currentText();
+    QString Selection = ui->AcroDef->currentText();
     QString name = ui->AcroLabel->text();
-    QString format0 = name + " (" + def1 +"); ";
-    QString format1 = def1 + " (" + name +"); ";
 
-         Sorter::Class_list_user_defined_f0.push_back(format0);
-         Sorter::Class_list_all_f0.push_back(format0);
+    Sorter::Class_all[Sorter::iteration]->set_def(Selection);
 
 
+//    QString format0 = name + " (" + def1 +"); ";
+//    QString format1 = def1 + " (" + name +"); ";
 
-        Sorter::Class_list_approved_f1.push_back(format1);
-        Sorter::Class_list_all_f1.push_back(format1);
+
+//         Sorter::Class_list_user_defined_f0.push_back(format0);
+//         Sorter::Class_list_all_f0.push_back(format0);
+
+
+
+//        Sorter::Class_list_user_defined_f1.push_back(format1);
+//        Sorter::Class_list_all_f1.push_back(format1);
 
     }
 
     else {
-        QString def1 = ui->AcroEdit->text();
+        QString Selection = ui->AcroEdit->text();
         QString name = ui->AcroLabel->text();
-        QString format0 = name + " (" + def1 +"); ";
-        QString format1 = def1 + " (" + name +"); ";
 
-            Sorter::Class_list_user_defined_f0.push_back(format0);
-            Sorter::Class_list_all_f0.push_back(format0);
+        Sorter::Class_all[Sorter::iteration]->set_def(Selection);
 
-            Sorter::Class_list_user_defined_f1.push_back(format1);
-            Sorter::Class_list_all_f1.push_back(format1);
+
+//        QString format0 = name + " (" + def1 +"); ";
+//        QString format1 = def1 + " (" + name +"); ";
+
+//            Sorter::Class_list_user_defined_f0.push_back(format0);
+//            Sorter::Class_list_all_f0.push_back(format0);
+
+//            Sorter::Class_list_user_defined_f1.push_back(format1);
+//            Sorter::Class_list_all_f1.push_back(format1);
     }
 
     this->close();
