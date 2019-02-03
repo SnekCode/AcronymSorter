@@ -85,7 +85,8 @@ public slots:
     bool RegEx_Search(QString arg, QString &input);
     void Save_Config();
     void AcroVerification(std::vector<Acronyms*> arg);
-
+    void test ();
+    void on_actionDebug_triggered();
 
 public:
     Ui::Sorter *ui;
@@ -101,7 +102,6 @@ private slots:
     void on_action_Open_triggered();
     void on_actionExport_triggered();
     void on_actionClear_triggered();
-    void on_actionDebug_triggered();
     void on_pushButton_clicked();
     void on_Version_triggered();
     void on_actionExit_triggered();

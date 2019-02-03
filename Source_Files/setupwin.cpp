@@ -6,11 +6,11 @@ SetupWin::SetupWin(QWidget *parent) :
     ui(new Ui::SetupWin)
 {
     ui->setupUi(this);
-    Sorter w;
-    w.show();
+
 }
 
 SetupWin::~SetupWin()
 {
     delete ui;
 }
+

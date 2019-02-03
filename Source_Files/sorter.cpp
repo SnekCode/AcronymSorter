@@ -1172,3 +1172,7 @@ void Sorter::on__15WGRule_toggled(bool checked)
     _15WG = false;
 
 }
+
+void Sorter::test(){
+    ui->InputBox->setText("Hello Singals!");
+}

@@ -1,5 +1,4 @@
-#ifndef SETUPWIN_H
-#define SETUPWIN_H
+#pragma once
 #include "sorter.h"
 #include <QMainWindow>
 
@@ -16,8 +15,10 @@ public:
     ~SetupWin();
     friend class Sorter;
 
+public slots:
+
+
 private:
     Ui::SetupWin *ui;
 };
 
-#endif // SETUPWIN_H
