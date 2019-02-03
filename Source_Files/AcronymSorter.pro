@@ -29,18 +29,21 @@ SOURCES += \
         sorter.cpp \
     Acronyms.cpp \
     changelog.cpp \
-    verifyacro.cpp
+    verifyacro.cpp \
+    setupwin.cpp
 
 HEADERS += \
         sorter.h \
     Acronyms.h \
     changelog.h \
-    verifyacro.h
+    verifyacro.h \
+    setupwin.h
 
 FORMS += \
         sorter.ui \
     changelog.ui \
-    verifyacro.ui
+    verifyacro.ui \
+    setupwin.ui
 
 INCLUDEPATH += "$$PWD/data"
 

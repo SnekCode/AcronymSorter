@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include "Acronyms.h"
 #include "verifyacro.h"
+#include "setupwin.h"
 #include<QFile>
 #include<QFileDialog>
 #include<QTextStream>
@@ -118,6 +119,7 @@ private slots:
 
     friend class Acronyms;
     friend class VerifyAcro;
+    friend class SetupWin;
 
 };
 
