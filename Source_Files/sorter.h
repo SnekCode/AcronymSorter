@@ -35,6 +35,7 @@ bool debug = false;
 bool _15WG = true;
 bool isDoDList;
 bool is15WgList;
+bool highlight;
 int windowWidth = 1500;
 int windowHeight = 400;
 int w_xpos = 0;
@@ -67,6 +68,7 @@ static QString list_user_defined_f1;
 static QString list_all_f2;
 static QString list_approved_f2;
 static QString list_user_defined_f2;
+static QString statusBar;
 static int OutputFormatBoxIndex;
 static int SortModeBoxIndex;
 static size_t iteration;
@@ -114,6 +116,9 @@ private slots:
     void Logic_Diagnostic();
     void on_InputBox_textChanged();
     void on__15WGRule_toggled(bool checked);
+    void blankHighlight();
+    void statusBarUpdate();
+
 
 
     friend class Acronyms;

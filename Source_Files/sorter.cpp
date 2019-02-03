@@ -26,6 +26,7 @@ QString Sorter::list_user_defined_f1;
 QString Sorter::list_approved_f2;
 QString Sorter::list_all_f2;
 QString Sorter::list_user_defined_f2;
+QString Sorter::statusBar;
 size_t Sorter::iteration;
 int Sorter::SortModeBoxIndex;
 int Sorter::OutputFormatBoxIndex;
@@ -41,8 +42,7 @@ Sorter::Sorter(QWidget *parent) :
         this->setWindowIcon(*ico);
     Load_Config();
     ui->statusBar->showMessage("Config Init Successful... Previous State Loaded!",4000);
-
-
+    ui->dockWidget->hide();
 }
 
 Sorter::~Sorter()
@@ -224,8 +224,11 @@ void Sorter::Logic_Diagnostic()
                 QMessageBox::information(this, "Logic Diagnostic", msg);
 }
 
-
 void Sorter::Load_List(){
+    QTextCursor cursor(ui->InputBox->document());
+    cursor.clearSelection();
+
+
     list_all_f1.clear();
     list_all_f2.clear();
     list_approved_f1.clear();
@@ -233,6 +236,7 @@ void Sorter::Load_List(){
     list_user_defined_f1.clear();
     list_user_defined_f2.clear();
     iteration = 0;
+    repeatedAcronyms = false;
     input_qtxt = ui->InputBox->toPlainText();
     Unknown_txt = input_qtxt;
     if(input_qtxt.size() == 0)
@@ -351,8 +355,46 @@ void Sorter::Search_for(QStringList arg)
               }
               arg.clear();
           }
-       }//search for end
+       };
 
+void Sorter::AcroVerification(std::vector <Acronyms*> arg)
+{
+    size_t total = (arg.size());
+    iteration = 0;
+    QString test1 = "Nodef";
+    QString test2 = "???";
+
+    while (iteration < total)
+    {
+    if (*arg[iteration]->def1 == test2)
+    {
+    VerifyAcro verify;
+    verify.setModal(true);
+    verify.exec();
+    }
+    else if (*arg[iteration]->def2 != test1)
+        {
+        VerifyAcro verify;
+        verify.setModal(true);
+        verify.exec();
+        }
+        else {
+        arg[iteration]->set_def(*arg[iteration]->def1);
+    }
+
+            arg[iteration]->set_num(1);
+            QString name  = *arg[iteration]->name;
+            QString def = arg[iteration]->SelectedDef;
+            QString format1 = name + " (" + def +"); ";
+            QString format2 = def + " (" + name +"); ";
+
+            arg[iteration]->set_f1(format1);
+            arg[iteration]->set_f2(format2);
+
+            iteration++;
+        }
+
+}
 
 void Sorter::Find_User_Defined(){
 
@@ -378,6 +420,7 @@ void Sorter::Find_User_Defined(){
 
 
           {//for some scope
+              int count = 0;
           for (auto i{0}; i < patterns.length(); i++)
           {
               QRegularExpression rx(patterns[i]);
@@ -386,11 +429,17 @@ void Sorter::Find_User_Defined(){
               while(match.hasMatch())
                   {
                       CapList.push_back(match.captured());
-                      Unknown_txt.remove(match.captured());
+                      //Unknown_txt.remove(match.captured());
+                      int start = match.capturedStart();
+                      int len = match.capturedLength();
+                      Unknown_txt.remove(start, len);
                       match = rx.match(Unknown_txt);
+                      count++;
                   }
                   //Unknown_txt.replace(CAPS, " ");
               }//for
+          if(count > 1)
+              repeatedAcronyms = true;
 
           UnknownLoop(CapList);
           }//scope
@@ -405,17 +454,20 @@ void Sorter::Find_User_Defined(){
 
 
         // set font and size constant: v0.1.3 -UI branch.0 removed user option to control font.
+          //BUG Text highlighted when program runs the sort cuases a crash
 
-          ui->OutputBox->setFontFamily("Calibri");
-          ui->OutputBox->setFontPointSize(11);
-          ui->InputBox->setFontFamily("Calibri");
-          ui->InputBox->setFontPointSize(11);
+          //          ui->OutputBox->setFontFamily("Calibri");
+          //          ui->OutputBox->setFontPointSize(11);
+          //          ui->InputBox->setFontFamily("Calibri");
+          //          ui->InputBox->setFontPointSize(11);
 
         //call to open verifyAcro window allowing user to talior the results and to enter Definitions for the unknown
           _15WG = ui->_15WGRule->isChecked();
           AcroVerification(Class_all);
 
-
+                totalCount = 0;
+                approvedCount = 0;
+                userDefinedCount = 0;
           for (size_t i {0}; i < Class_all.size(); i++){
 
                  list_all_f1.push_back(Class_all[i]->format1);
@@ -478,12 +530,9 @@ void Sorter::Find_User_Defined(){
           //Controls Notification label;
           //QString countTotal = &"Total: " +  totalCount + " ";
 
+          blankHighlight();
 
-
-          if(repeatedAcronyms)
-          {
-
-          }
+          statusBarUpdate();
 
           //0.1.3 UI Update should obsolete this
        //sorter drop down logic
@@ -508,45 +557,75 @@ void Sorter::Find_User_Defined(){
           return;
    }
 
-void Sorter::AcroVerification(std::vector <Acronyms*> arg)
+void Sorter::statusBarUpdate()
 {
-    size_t total = (arg.size());
-    iteration = 0;
-    QString test1 = "Nodef";
-    QString test2 = "???";
+    QString blank = " Blank definitions found!   ";
+    QString repeat = " Duplicate Acronyms found! Please double check your document!   ";
+    QString Total = "Total Acronyms used: " + QString::number(totalCount) + "   ";
+    QString userdefinedTotal = QString::number(userDefinedCount);
+    //ui->statusBar->clearMessage();
+    statusBar.clear();
+    statusBar.push_back(Total);
+    if(repeatedAcronyms)
+        statusBar.push_back(repeat);
+    if(highlight)
+        statusBar.push_back(blank);
 
-    while (iteration < total)
-    {
-    if (*arg[iteration]->def1 == test2)
-    {
-    VerifyAcro verify;
-    verify.setModal(true);
-    verify.exec();
-    }
-    else if (*arg[iteration]->def2 != test1)
-        {
-        VerifyAcro verify;
-        verify.setModal(true);
-        verify.exec();
-        }
-        else {
-        arg[iteration]->set_def(*arg[iteration]->def1);
+    if(userDefinedCount > 5 && _15WG && !repeatedAcronyms && !highlight)
+        statusBar.push_back("Document exceeds 15th Wing Acronym rule by: " + QString::number(userDefinedCount - 5) );
+    else if (_15WG && !highlight){
+        statusBar.push_back("Document passes 15th Wing Acronym rule");
     }
 
-            arg[iteration]->set_num(1);
-            QString name  = *arg[iteration]->name;
-            QString def = arg[iteration]->SelectedDef;
-            QString format1 = name + " (" + def +"); ";
-            QString format2 = def + " (" + name +"); ";
-
-            arg[iteration]->set_f1(format1);
-            arg[iteration]->set_f2(format2);
-
-            iteration++;
-        }
+    ui->statusBar->showMessage(statusBar);
 
 }
 
+void Sorter::blankHighlight()
+{/////Finds blank user defines and highlights them
+    int begin = 0;
+    int end = 0;
+
+    QTextCharFormat fmt;
+    fmt.setBackground(Qt::yellow);
+    QTextCursor cursor(ui->OutputBox->document());
+    cursor.setCharFormat(fmt);
+    QString string = ui->OutputBox->toPlainText();
+
+    //Example blank ----  HJUI (); RBAA () //       ;       //
+
+    QRegularExpression rx("\\w+ \\(\\)");
+    QRegularExpressionMatch match;
+    QRegularExpressionMatchIterator itrx = rx.globalMatch(string);
+    if(!match.hasMatch())
+        highlight = false;
+
+
+    for(int i{0}; i < string.length(); i++)
+    {
+        match = rx.match(string);
+        if(match.hasMatch()){
+            highlight = true;
+        begin = match.capturedStart();
+        end = match.capturedEnd();
+        cursor.beginEditBlock();
+        cursor.setPosition(begin, QTextCursor::MoveAnchor);
+        cursor.setPosition(end, QTextCursor::KeepAnchor);
+        cursor.endEditBlock();
+        cursor.setCharFormat(fmt);
+
+        int len = match.capturedLength();
+        QString strFill;
+        for(int j {0}; j < len; j++)
+            strFill.push_back(" ");
+        string.replace(begin, len, strFill);
+    }
+    }
+
+
+
+
+};
 
 void Sorter::ClearClassVector(std::vector<Acronyms *> &a)
 {
@@ -769,16 +848,7 @@ QString Sorter::print(class Acronyms a)
 
 bool Sorter::RegEx_Search(QString test_case, QString &Unknown_txt)
 {
-       // Multicase REGEX test works 1/1/2019 @ 1730
 
-//        QRegExp PLSpace1   ("(\\s"     + test_case + ")(?=\\s)");   // Space with treiling space //tested
-//        QRegExp PLSpace2   ("(\\s\\d*"   + test_case + ")(?=\\s)");   // Space & Digit with trailing space //tested
-//        QRegExp PLSpace3   ("(^\\d*"   + test_case + ")(?=\\s)");   // Caret & Digit with trailing space //tested
-//        QRegExp PLEndline1 ("(\\s"     + test_case + ")(?=$)");     // Space with trailing endline //tested
-//        QRegExp PLEndline2 ("(\\s\\d*" + test_case + ")(?=$)");     // Space & Digit with trailing endline //tested
-//        QRegExp PLEndline3 ("(^\\d*" + test_case + ")(?=$)");   // Caret with trailing endline//tested
-
-        // TAC(A)
         QStringList patterns;
         if(test_case.length() > 1) //multi letter test case
         {
@@ -797,9 +867,6 @@ bool Sorter::RegEx_Search(QString test_case, QString &Unknown_txt)
                                 "(\\d)" + QRegularExpression::escape(test_case) + "(\\d|$)",
                                 "(^)" + QRegularExpression::escape(test_case) + "(\\s|$)",
                                 "(^)" + QRegularExpression::escape(test_case) + "(\\d|$)"};
-             //(\d+A)(?=\s) finds 2A
-             //(\d+A)(?=$) finds with endline 2A
-             //(\s|\d)A(\s|\d)
 
              for(auto a : single)
                  patterns.push_back(a);
@@ -863,111 +930,9 @@ if(deleteCount > 1)
 {
     repeatedAcronyms = true;
 }
+
 return patternFound;
 }
-
-//        0.1.1 Regex logic for history sake Also look at how bad I am at this haha!!!!
-//        if(input_qtxt.contains(PLSpace1))
-//        {
-//            input.replace(PLSpace1, " ");
-//            return true;
-//        }
-//        if(input_qtxt.contains(PLSpace2))
-//        {
-//            input.replace(PLSpace2, " ");
-//            return true;
-//        }
-
-//        if(input_qtxt.contains(PLSpace3))
-//        {
-//            input.replace(PLSpace3, " ");
-//            return true;
-//        }
-
-//        if(input_qtxt.contains(PLEndline1))
-//        {
-//            input.replace(PLEndline1, " ");
-//            return true;
-//        }
-
-//        if(input_qtxt.contains(PLEndline2))
-//        {
-//            input.replace(PLEndline2, " ");
-//            return true;
-//        }
-
-//        if(input_qtxt.contains(PLEndline3))
-//        {
-//            input.replace(PLEndline3, " ");
-//            return true;
-//        }
-
-//singlecase Archived 01 Feb 2019
-/*
-bool Sorter::SingleCase(QString test_case, QString &input){
-
-    QString input_qtxt = ui->InputBox->toPlainText();
-    std::string input_txt = input_qtxt.toStdString();
-
-    //SingleCase RegEx test works 1/1/2019 @2000
-
-//    QRegExp PLSpace1   ("(\\s"     + test_case + ")(?=\\s)");   // Space with treiling space //tested
-//    QRegExp PLSpace2   ("(\\s\\d+"   + test_case + ")(?=\\s)");   // Space & Digit with trailing space //tested
-//    QRegExp PLSpace3   ("(^\\d+"   + test_case + ")(?=\\s)");   // Caret & Digit with trailing space //tested
-//    QRegExp PLEndline1 ("(\\s"     + test_case + ")(?=$)");     // Space with trailing endline //tested
-//    QRegExp PLEndline2 ("(\\s\\$?\\d+" + test_case + ")(?=$)");     // Space & Digit with trailing endline //tested
-//    QRegExp PLEndline3 ("(^" + test_case + ")(?=\\s)");
-//    QRegExp PLEndline4 ("(^" + test_case + ")($)");
-
-
-    //need to a logic that if a singlecase match is made the class will be saved a global boolean set to true and the processing of the acronym section is continued.
-
-    //additional: SingleCase slot's def needs to be updated to allow for a return vaule.  this will offer the option to have more than two possible return values.  currently set to be true or false.  the
-
-
-
-//    if(input_qtxt.contains(PLSpace1))
-//    {
-//        input.replace(PLSpace1, " ");
-
-//        return true;
-//    }
-
-//    if (input_qtxt.contains(PLSpace2))
-//    {
-//        input.replace(PLSpace2, " ");
-//        return true;
-//    }
-
-//    if (input_qtxt.contains(PLSpace3))
-//    {
-//        input.replace(PLSpace3, " ");
-//        return true;
-//    }
-
-//    if (input_qtxt.contains(PLEndline1))
-//    {
-//        input.replace(PLEndline1, " ");
-//        return true;
-//    }
-
-//    if (input_qtxt.contains(PLEndline2))
-//    {
-//        input.replace(PLEndline2, " ");
-//        return true;
-//    }
-//    if (input_qtxt.contains(PLEndline3))
-//    {
-//        input.replace(PLEndline3, " ");
-//        return true;
-//    }
-//    if (input_qtxt.contains(PLEndline4))
-//    {
-//        input.replace(PLEndline4, " ");
-//        return true;
-//    }
-
-*/
 
 void Sorter::on_SortBtn_clicked()
 {
@@ -1107,6 +1072,7 @@ void Sorter::on_SortModeBox_currentIndexChanged()
         if(Sorter::SortModeBoxIndex == 2)
             ui->OutputBox->setPlainText(list_all_f2);
     }
+    blankHighlight();
 }
 
 void Sorter::on_actionRestore_DataBase_File_triggered()
