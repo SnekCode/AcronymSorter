@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1187</width>
+    <width>1463</width>
     <height>744</height>
    </rect>
   </property>
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1463</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Sorter</string>
@@ -90,7 +96,7 @@
       </property>
      </widget>
     </item>
-    <item>
+    <item alignment="Qt::AlignBottom">
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -289,7 +295,7 @@
       </widget>
      </widget>
     </item>
-    <item>
+    <item alignment="Qt::AlignBottom">
      <widget class="QTextEdit" name="OutputBox">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -301,6 +307,12 @@
        <size>
         <width>0</width>
         <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>300</height>
        </size>
       </property>
       <property name="font">
@@ -326,7 +338,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1187</width>
+     <width>1463</width>
      <height>21</height>
     </rect>
    </property>

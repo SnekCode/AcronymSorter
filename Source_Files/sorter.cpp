@@ -852,21 +852,26 @@ bool Sorter::RegEx_Search(QString test_case, QString &Unknown_txt)
         QStringList patterns;
         if(test_case.length() > 1) //multi letter test case
         {
-             QStringList multi {  "\\s("+  QRegularExpression::escape(test_case) + ")\\s",
-                                    "\\s(" + QRegularExpression::escape(test_case) + ")$",
-                                    "^("  +  QRegularExpression::escape(test_case) + ")\\s"  ,
-                                    "^(" +   QRegularExpression::escape(test_case) + ")$"};
+             QStringList multi {  "\\W("+  QRegularExpression::escape(test_case) + ")\\W",
+                                    "\\W(" + QRegularExpression::escape(test_case) + ")$",
+                                    "^("  +  QRegularExpression::escape(test_case) + ")\\W"  ,
+                                    "^(" +   QRegularExpression::escape(test_case) + ")$",
+                                    "/(" +   QRegularExpression::escape(test_case) + "\\W",
+                                    "\\W(" + QRegularExpression::escape(test_case) + ")?s",
+                                    "\\W(" + QRegularExpression::escape(test_case) + ")?'"};
+
              for(auto a : multi)
                  patterns.push_back(a);
         }
 
         //  A&P AAA A AAA AA AAAA AAAAAA A AC AA AA AC AAAA CA ACAC ACA CACA 2A 3A
-        else{ //single letter test case
+        // /Wg  DCCs/
+        else{ //single letter test case 'd
 
-            QStringList single {"(\\s)" + QRegularExpression::escape(test_case) + "(\\s|$)",
-                                "(\\d)" + QRegularExpression::escape(test_case) + "(\\d|$)",
-                                "(^)" + QRegularExpression::escape(test_case) + "(\\s|$)",
-                                "(^)" + QRegularExpression::escape(test_case) + "(\\d|$)"};
+            QStringList single {"(?!')\\W" + QRegularExpression::escape(test_case) + "(\\W|$)",
+                                "(\\d)" + QRegularExpression::escape(test_case) + "(\\d|\\W|$)",
+                                "(^)" + QRegularExpression::escape(test_case) + "(\\W|$)",
+                                "(^)" + QRegularExpression::escape(test_case) + "(\\W|$)"};
 
              for(auto a : single)
                  patterns.push_back(a);
