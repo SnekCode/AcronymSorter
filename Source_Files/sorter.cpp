@@ -366,21 +366,24 @@ void Sorter::AcroVerification(std::vector <Acronyms*> arg)
 
     while (iteration < total)
     {
-    if (*arg[iteration]->def1 == test2)
-    {
-    VerifyAcro verify;
-    verify.setModal(true);
-    verify.exec();
-    }
-    else if (*arg[iteration]->def2 != test1)
-        {
         VerifyAcro verify;
         verify.setModal(true);
         verify.exec();
-        }
-        else {
-        arg[iteration]->set_def(*arg[iteration]->def1);
-    }
+//    if (*arg[iteration]->def1 == test2)
+//    {
+//    VerifyAcro verify;
+//    verify.setModal(true);
+//    verify.exec();
+//    }
+//    else if (*arg[iteration]->def2 != test1)
+//        {
+//        VerifyAcro verify;
+//        verify.setModal(true);
+//        verify.exec();
+//        }
+//        else {
+//        arg[iteration]->set_def(*arg[iteration]->def1);
+//    }
 
             arg[iteration]->set_num(1);
             QString name  = *arg[iteration]->name;

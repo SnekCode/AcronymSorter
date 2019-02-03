@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>381</width>
-    <height>118</height>
+    <height>171</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,9 +24,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="lb_note">
      <property name="text">
-      <string>An Acronym is Undefined.  Please enter the Acronym Definition below:</string>
+      <string>An Acronym is Undefined. Please enter the Acronym Definition below:</string>
      </property>
     </widget>
    </item>
@@ -44,12 +44,26 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="lb_def1">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QComboBox" name="AcroDef">
      <property name="font">
       <font>
        <family>Calibri</family>
        <pointsize>11</pointsize>
       </font>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lb_CustomNote">
+     <property name="text">
+      <string>Or enter a Custom Definition:</string>
      </property>
     </widget>
    </item>

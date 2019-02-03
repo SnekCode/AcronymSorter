@@ -20,7 +20,9 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
     QString def6 = *Sorter::Class_all[Sorter::iteration]->def6;
     QString def7 = *Sorter::Class_all[Sorter::iteration]->def7;
 
-     ui->AcroEdit->hide();
+     //ui->AcroEdit->hide();
+    ui->lb_def1->hide();
+    ui->lb_def1->setText(def1);
 
         QString List{};
 
@@ -37,6 +39,7 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
         ui->AcroDef->addItem(def2);
         ui->AcroDef->addItem(def1);
         ui->AcroLabel->setText(name);
+
     }
 
     else if (def6 != "Nodef")
@@ -86,6 +89,15 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
             ui->AcroEdit->show();
 
      }
+    else {
+        Sorter::Class_all[Sorter::iteration]->set_num(1);
+        ui->AcroDef->hide();
+        ui->AcroLabel->setText(name + " (" + def1 + ")");
+
+        ui->lb_note->setText("The Acronym: " + name + " has one definition. Press OK to countinue");
+
+
+    }
 
     return;
 }
@@ -102,43 +114,24 @@ void VerifyAcro::on_pushButton_clicked()
 
 void VerifyAcro::on_buttonBox_accepted()
 {
-    if(ui->AcroDef->isVisible()) //this section controls which list is placed where use bool_15wg to control the dod list flow!!!!!!!!!!!!!
+    if(ui->AcroDef->isVisible() && ui->AcroEdit->text().isEmpty())
     {
     QString Selection = ui->AcroDef->currentText();
-    QString name = ui->AcroLabel->text();
-
     Sorter::Class_all[Sorter::iteration]->set_def(Selection);
 
-
-//    QString format0 = name + " (" + def1 +"); ";
-//    QString format1 = def1 + " (" + name +"); ";
-
-
-//         Sorter::Class_list_user_defined_f0.push_back(format0);
-//         Sorter::Class_list_all_f0.push_back(format0);
-
-
-
-//        Sorter::Class_list_user_defined_f1.push_back(format1);
-//        Sorter::Class_list_all_f1.push_back(format1);
+    }
+    else if (!ui->AcroEdit->text().isEmpty())
+    {
+        QString Selection = ui->AcroEdit->text();
+        Sorter::Class_all[Sorter::iteration]->set_def(Selection);
+        Sorter::Class_all[Sorter::iteration]->set_sourceList("user");
 
     }
-
     else {
-        QString Selection = ui->AcroEdit->text();
-        QString name = ui->AcroLabel->text();
-
-        Sorter::Class_all[Sorter::iteration]->set_def(Selection);
-
-
-//        QString format0 = name + " (" + def1 +"); ";
-//        QString format1 = def1 + " (" + name +"); ";
-
-//            Sorter::Class_list_user_defined_f0.push_back(format0);
-//            Sorter::Class_list_all_f0.push_back(format0);
-
-//            Sorter::Class_list_user_defined_f1.push_back(format1);
-//            Sorter::Class_list_all_f1.push_back(format1);
+            if(ui->AcroEdit->text().isEmpty() && ui->lb_def1->text() == "???")
+         Sorter::Class_all[Sorter::iteration]->set_def("");
+            else
+            Sorter::Class_all[Sorter::iteration]->set_def(ui->lb_def1->text());
     }
 
     this->close();
