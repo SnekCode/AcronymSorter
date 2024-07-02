@@ -42,6 +42,8 @@ int w_xpos = 0;
 int w_ypos = 0;
 int fontsize = 8;
 
+VerifyAcro *verify;
+
 public:
 //Class Varibles
 bool repeatedAcronyms = false; //set to true if repeated acronyms are found then notifies user.

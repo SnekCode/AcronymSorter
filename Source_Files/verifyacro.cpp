@@ -11,16 +11,26 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    QString name = *Sorter::Class_all[Sorter::iteration]->name;
-    QString def1 = *Sorter::Class_all[Sorter::iteration]->def1;
-    QString def2 = *Sorter::Class_all[Sorter::iteration]->def2;
-    QString def3 = *Sorter::Class_all[Sorter::iteration]->def3;
-    QString def4 = *Sorter::Class_all[Sorter::iteration]->def4;
-    QString def5 = *Sorter::Class_all[Sorter::iteration]->def5;
-    QString def6 = *Sorter::Class_all[Sorter::iteration]->def6;
-    QString def7 = *Sorter::Class_all[Sorter::iteration]->def7;
+    std::vector <QLabel*> label;
+    for (size_t i {0}; i < Sorter::Class_all.size(); i++)
+    {
+    QString name = *Sorter::Class_all[i]->name;
+    QString def1 = *Sorter::Class_all[i]->def1;
+    QString def2 = *Sorter::Class_all[i]->def2;
+    QString def3 = *Sorter::Class_all[i]->def3;
+    QString def4 = *Sorter::Class_all[i]->def4;
+    QString def5 = *Sorter::Class_all[i]->def5;
+    QString def6 = *Sorter::Class_all[i]->def6;
+    QString def7 = *Sorter::Class_all[i]->def7;
 
-     //ui->AcroEdit->hide();
+    QLabel *lb = new QLabel;
+    label.push_back(lb);
+
+    //label[i]->setText(QString::number(i));
+    QDialog::layout()->addWidget(label[i]);
+    label[i]->show();
+
+    //ui->AcroEdit->hide();
     ui->lb_def1->hide();
     ui->lb_def1->setText(def1);
 
@@ -79,6 +89,7 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
     else if (def2 != "Nodef")
     {
         Sorter::Class_all[Sorter::iteration]->set_num(1);
+        ui->lb_note->setText("The Acronym " + name + " has multible definitions. Please choose below: ");
         ui->AcroDef->addItem(def2);
         ui->AcroDef->addItem(def1);
     }
@@ -87,6 +98,7 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
             Sorter::Class_all[Sorter::iteration]->set_num(2);
             ui->AcroDef->hide();
             ui->AcroEdit->show();
+
 
      }
     else {
@@ -99,6 +111,7 @@ VerifyAcro::VerifyAcro(QWidget *parent) :
 
     }
 
+}
     return;
 }
 
@@ -112,6 +125,8 @@ void VerifyAcro::on_pushButton_clicked()
 
 }
 
+
+// if a User defined database was to be made this is the section to call that function.
 void VerifyAcro::on_buttonBox_accepted()
 {
     if(ui->AcroDef->isVisible() && ui->AcroEdit->text().isEmpty())

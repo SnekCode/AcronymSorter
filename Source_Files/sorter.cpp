@@ -43,6 +43,7 @@ Sorter::Sorter(QWidget *parent) :
     Load_Config();
     ui->statusBar->showMessage("Config Init Successful... Previous State Loaded!",4000);
     ui->dockWidget->hide();
+
 }
 
 Sorter::~Sorter()
@@ -363,27 +364,11 @@ void Sorter::AcroVerification(std::vector <Acronyms*> arg)
     iteration = 0;
     QString test1 = "Nodef";
     QString test2 = "???";
+    verify = new VerifyAcro;
+    verify->exec();
 
     while (iteration < total)
     {
-        VerifyAcro verify;
-        verify.setModal(true);
-        verify.exec();
-//    if (*arg[iteration]->def1 == test2)
-//    {
-//    VerifyAcro verify;
-//    verify.setModal(true);
-//    verify.exec();
-//    }
-//    else if (*arg[iteration]->def2 != test1)
-//        {
-//        VerifyAcro verify;
-//        verify.setModal(true);
-//        verify.exec();
-//        }
-//        else {
-//        arg[iteration]->set_def(*arg[iteration]->def1);
-//    }
 
             arg[iteration]->set_num(1);
             QString name  = *arg[iteration]->name;

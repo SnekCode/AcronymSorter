@@ -22,7 +22,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="Layout">
    <item>
     <widget class="QLabel" name="lb_note">
      <property name="text">
